@@ -1,0 +1,106 @@
+<script setup>
+import { ref } from 'vue'
+import { Check, ChevronLeft, Info } from 'lucide-vue-next'
+import { useAppStore } from '../../../stores/useAppStore'
+
+const appStore = useAppStore()
+const emit = defineEmits(['navigate'])
+
+const plans = [
+  {
+    id: 'solo',
+    name: 'Solo 플랜',
+    description: '나를 위한 식사 리듬',
+    minimum: '회차별 메뉴 3개 이상',
+  },
+  {
+    id: 'family',
+    name: 'Family 플랜',
+    description: '함께 먹는 넉넉한 식사',
+    minimum: '회차별 메뉴 6개 이상',
+  },
+]
+
+// ref의 초기값을 현재 예약 플랜 또는 이용 중인 플랜으로 잡아 기존 선택을 화면에 보여줍니다.
+const selectedNextPlan = ref(appStore.scheduledPlan || appStore.currentSubscription.planId)
+const isSaved = ref(false)
+
+function savePlanChange() {
+  if (selectedNextPlan.value === appStore.currentSubscription.planId) {
+    return
+  }
+
+  appStore.schedulePlanChange(selectedNextPlan.value)
+  isSaved.value = true
+}
+</script>
+
+<template>
+  <div class="page management-page">
+    <button class="back-button" type="button" @click="emit('navigate', 'subscription')">
+      <ChevronLeft :size="18" aria-hidden="true" />
+      내 구독으로
+    </button>
+
+    <section v-if="!isSaved" class="page-intro">
+      <p class="section-kicker">CHANGE PLAN</p>
+      <h1>다음에 이용할 플랜을<br />선택해주세요.</h1>
+      <p>현재 회차는 그대로 유지되며, 선택한 플랜은 다음 정기결제일부터 적용됩니다.</p>
+    </section>
+
+    <section v-if="!isSaved" class="management-plan-grid">
+      <button
+        v-for="plan in plans"
+        :key="plan.id"
+        class="management-plan-card"
+        :class="{ 'is-selected': selectedNextPlan === plan.id }"
+        type="button"
+        @click="selectedNextPlan = plan.id"
+      >
+        <span class="management-plan-card__check">
+          <Check v-if="selectedNextPlan === plan.id" :size="18" aria-hidden="true" />
+        </span>
+        <small>
+          {{ plan.id === appStore.currentSubscription.planId ? '현재 이용 중' : '변경 가능' }}
+        </small>
+        <strong>{{ plan.name }}</strong>
+        <span>{{ plan.description }}</span>
+        <span>{{ plan.minimum }}</span>
+        <b>가격 미정</b>
+      </button>
+    </section>
+
+    <aside v-if="!isSaved" class="notice-box notice-box--info management-notice">
+      <Info :size="20" aria-hidden="true" />
+      <div>
+        <strong>적용 시점 안내</strong>
+        <p>플랜 가격과 배송비는 다음 결제 전 백엔드 견적 결과를 기준으로 표시됩니다.</p>
+      </div>
+    </aside>
+
+    <section v-if="isSaved" class="management-result" role="status">
+      <span class="management-result__icon"><Check :size="34" aria-hidden="true" /></span>
+      <p class="section-kicker">CHANGE SCHEDULED</p>
+      <h1>플랜 변경을 예약했어요.</h1>
+      <p>다음 정기결제일부터 선택한 플랜이 적용됩니다.</p>
+      <button class="button button-primary" type="button" @click="emit('navigate', 'subscription')">
+        내 구독에서 확인하기
+      </button>
+    </section>
+
+    <div v-if="!isSaved" class="mobile-action-bar">
+      <div>
+        <span>다음 적용 플랜</span>
+        <strong>{{ selectedNextPlan === 'family' ? 'Family' : 'Solo' }}</strong>
+      </div>
+      <button
+        class="button button-primary"
+        type="button"
+        :disabled="selectedNextPlan === appStore.currentSubscription.planId"
+        @click="savePlanChange"
+      >
+        변경 예약하기
+      </button>
+    </div>
+  </div>
+</template>
