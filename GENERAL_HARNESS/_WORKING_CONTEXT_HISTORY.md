@@ -254,3 +254,11 @@
 - 다음 작업에 영향을 주는 결정: 실제 민감 기능은 화면에서 실행하지 않으며 서버 검증 API가 준비된 뒤 연결한다. PrimeVue는 관리자 전용이다.
 - 더 이상 읽지 않아도 되는 오래된 맥락: 최초 디자인 기반 Report의 다음 작업 목록은 최신 Report로 대체되었다.
 - 다시 확인해야 하는 증거 Report: `reports/archive/2026-07-30_chapchap-full-screen-implementation_report.md`
+
+## 2026-07-30 챱챱 서비스 폴더 개편 상태 요약
+
+- 최근 완료: 49개 WF UI를 유지한 채 7개 서비스별 `pages` 구조와 shared·legacy 경계로 개편, production build 확인
+- 남은 WARN/FAIL: 통합 Pinia store, 실제 API 명세, 자동화 테스트가 없어 WARN. FAIL 없음
+- 다음 작업에 영향을 주는 결정: 서비스는 다른 서비스의 내부 컴포넌트를 직접 import하지 않고 공용 UI만 shared에서 사용한다.
+- 더 이상 읽지 않아도 되는 오래된 맥락: 평면 `src/components` 구조를 기준으로 한 파일 위치 설명은 최신 Report로 대체되었다.
+- 다시 확인해야 하는 증거 Report: `reports/2026-07-30_chapchap-service-folder-restructure_report.md`

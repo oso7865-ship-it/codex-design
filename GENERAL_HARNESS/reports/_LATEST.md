@@ -6,8 +6,8 @@
 
 | 항목 | 값 |
 |---|---|
-| 최신 판단 기준 | `reports/2026-07-30_chapchap-service-folder-restructure_report.md` |
-| 기준 | 챱챱 49개 WF 구현 완료 후 서비스별 프론트엔드 폴더로 개편한 상태 |
+| 최신 판단 기준 | `reports/2026-07-30_chapchap-primevue5-upgrade_report.md` |
+| 기준 | 서비스별 프론트엔드 구조에서 PrimeVue 5.0.0으로 전환했으나 전달 키의 서명 검증 WARN이 남은 상태 |
 | 주의 | 하네스 자체의 이전 Report는 과거 하네스 의사결정 근거로만 사용한다. 이 프로젝트의 Next Work 판단은 이 파일과 `05.WORKING_CONTEXT.md`를 우선한다. |
 
 ## 읽기 순서
