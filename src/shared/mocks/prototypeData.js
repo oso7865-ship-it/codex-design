@@ -61,40 +61,21 @@ export const planDetails = {
     cycle: '1주 체험',
     benefits: ['자동 유료 전환 없음', '체험 종료 후 직접 플랜 선택', 'Solo·Family 전환 안내'],
   },
+  family: {
+    id: 'family',
+    name: 'Family 플랜',
+    kicker: 'TOGETHER',
+    description: '가족과 함께 넉넉한 식사 구성을 이어가는 정기 구독 플랜입니다.',
+    minimum: '회차별 메뉴 6개 이상',
+    cycle: '2주 단위 정기결제',
+    benefits: [
+      '메뉴별 추가금 없음',
+      '회차별 메뉴 변경',
+      '배송 조건 변경',
+      '다음 결제부터 플랜 변경',
+    ],
+  },
 }
-
-export const subscriptionRounds = [
-  {
-    id: 'ROUND-20260803',
-    title: '8월 첫 번째 배송',
-    deliveryDate: '2026-08-03',
-    status: '배송 준비',
-    menuCount: 3,
-    addressName: '집',
-    changeDeadline: '2026-08-01 18:00',
-    canEdit: true,
-  },
-  {
-    id: 'ROUND-20260726',
-    title: '7월 두 번째 배송',
-    deliveryDate: '2026-07-26',
-    status: '배송 완료',
-    menuCount: 3,
-    addressName: '집',
-    changeDeadline: '마감',
-    canEdit: false,
-  },
-  {
-    id: 'ROUND-20260712',
-    title: '7월 첫 번째 배송',
-    deliveryDate: '2026-07-12',
-    status: '배송 완료',
-    menuCount: 3,
-    addressName: '회사',
-    changeDeadline: '마감',
-    canEdit: false,
-  },
-]
 
 export const adminPages = {
   '037': {
@@ -122,7 +103,7 @@ export const adminPages = {
     description: '메뉴 설명과 선택 가능 여부를 관리합니다.',
     kind: 'form',
     fields: ['메뉴명', '메뉴 분류', '알레르기 정보', '영양 정보'],
-    notice: '필요한 정보: 메뉴 이미지 업로드 API와 알레르기 표기 기준',
+    notice: '메뉴 이미지 업로드와 알레르기 표기 기준은 운영 정책 확정 후 연결됩니다.',
   },
   '039': {
     title: '재고 관리',
@@ -172,7 +153,7 @@ export const adminPages = {
     description: '요일과 시간대별 최대 배송 가능 수량을 설정합니다.',
     kind: 'form',
     fields: ['배송 요일', '배송 시간대', '최대 수용량'],
-    notice: '필요한 정보: 배송 권역별 수용량 산정 기준과 초과 주문 처리 정책',
+    notice: '배송 권역별 수용량과 초과 주문 처리 기준은 운영 정책 확정 후 연결됩니다.',
   },
   '043': {
     title: '구독 목록',
@@ -297,7 +278,7 @@ export const adminPages = {
       ['현재 상태', '배송 준비'],
     ],
     primaryAction: '배송 상태 변경',
-    notice: '필요한 정보: 배송사·송장번호 API와 허용 상태 전이 기준',
+    notice: '배송사·운송장 조회와 상태 변경 기준은 배송 시스템 연결 후 제공됩니다.',
   },
   '051': {
     title: '환불 요청 목록',

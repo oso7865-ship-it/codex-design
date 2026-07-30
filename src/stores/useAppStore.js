@@ -14,6 +14,60 @@ const currentMenuQuantities = {
   4: 0,
 }
 
+const initialSubscriptionRounds = [
+  {
+    id: 'ROUND-20260803',
+    title: '8월 첫 번째 배송',
+    deliveryDate: '2026-08-03',
+    status: '주문 마감',
+    addressName: '집',
+    changeDeadline: '2026-08-01 18:00',
+    menuItems: [
+      { name: '바질 닭가슴살 덮밥', quantity: 2 },
+      { name: '단호박 소불고기 덮밥', quantity: 1 },
+    ],
+    canEditMenu: false,
+    menuEditDisabledReason: '배송 준비가 시작되어 이번 회차의 메뉴 변경이 마감되었습니다.',
+    canEditDelivery: false,
+    postponeUsed: false,
+    postponeOptions: ['2026-08-04', '2026-08-05', '2026-08-06'],
+  },
+  {
+    id: 'ROUND-20260810',
+    title: '8월 두 번째 배송',
+    deliveryDate: '2026-08-10',
+    status: '배송 예정',
+    addressName: '집',
+    changeDeadline: '2026-08-08 18:00',
+    menuItems: [
+      { name: '두부 채소 비빔밥', quantity: 1 },
+      { name: '바질 닭가슴살 덮밥', quantity: 2 },
+    ],
+    canEditMenu: true,
+    menuEditDisabledReason: '',
+    canEditDelivery: true,
+    postponeUsed: true,
+    postponeOptions: [],
+  },
+  {
+    id: 'ROUND-20260726',
+    title: '7월 두 번째 배송',
+    deliveryDate: '2026-07-26',
+    status: '배송 완료',
+    addressName: '집',
+    changeDeadline: '마감',
+    menuItems: [
+      { name: '바질 닭가슴살 덮밥', quantity: 2 },
+      { name: '단호박 소불고기 덮밥', quantity: 1 },
+    ],
+    canEditMenu: false,
+    menuEditDisabledReason: '이미 배송이 완료된 회차입니다.',
+    canEditDelivery: false,
+    postponeUsed: true,
+    postponeOptions: [],
+  },
+]
+
 export const useAppStore = defineStore('app', {
   state: () => ({
     addresses: [
@@ -97,6 +151,16 @@ export const useAppStore = defineStore('app', {
 
     refundHistory: [],
 
+    subscriptionRounds: initialSubscriptionRounds.map((round) => ({
+      ...round,
+      menuItems: round.menuItems.map((menu) => ({ ...menu })),
+      postponeOptions: [...round.postponeOptions],
+    })),
+
+    selectedPaymentId: 'PAY-202607-0012',
+    selectedDeliveryId: 'DEL-202608-0003',
+    selectedRoundId: 'ROUND-20260803',
+
     // subscriptionApplication은 신청이 완료되기 전까지만 사용하는 임시 입력값입니다.
     selectedPlan: 'solo',
     subscriptionApplication: {
@@ -124,7 +188,11 @@ export const useAppStore = defineStore('app', {
 
     scheduledPlan: '',
     isCancellationScheduled: false,
-    canEditCurrentDelivery: true,
+
+    // 실제 로그인 API가 연결되기 전까지 비회원 상태를 기본값으로 사용합니다.
+    // 체험 종료 안내는 로그인한 체험 사용자에게만 자동으로 보여 줍니다.
+    isAuthenticated: false,
+    isTrialUser: true,
 
     // 백엔드 연결 전 체험 종료 응답을 재현하기 위한 예시 상태입니다.
     trialStatus: 'ended',
@@ -162,6 +230,22 @@ export const useAppStore = defineStore('app', {
         }
       )
     },
+
+    selectedPayment: (state) =>
+      state.paymentHistory.find((payment) => payment.id === state.selectedPaymentId) ||
+      state.paymentHistory[0],
+
+    selectedDelivery: (state) =>
+      state.deliveryHistory.find((delivery) => delivery.id === state.selectedDeliveryId) ||
+      state.deliveryHistory[0],
+
+    selectedRound: (state) =>
+      state.subscriptionRounds.find((round) => round.id === state.selectedRoundId) ||
+      state.subscriptionRounds[0],
+
+    currentRound: (state) => state.subscriptionRounds[0],
+
+    canEditCurrentDelivery: (state) => Boolean(state.subscriptionRounds[0]?.canEditMenu),
   },
 
   actions: {
@@ -247,6 +331,31 @@ export const useAppStore = defineStore('app', {
       this.currentSubscription.selectedAddressId = selectedAddressId
     },
 
+    selectPayment(paymentId) {
+      this.selectedPaymentId = paymentId
+    },
+
+    selectDelivery(deliveryId) {
+      this.selectedDeliveryId = deliveryId
+    },
+
+    selectRound(roundId) {
+      this.selectedRoundId = roundId
+    },
+
+    postponeRound(roundId, nextDeliveryDate) {
+      const round = this.subscriptionRounds.find((item) => item.id === roundId)
+
+      if (!round || round.postponeUsed || !round.postponeOptions.includes(nextDeliveryDate)) {
+        return false
+      }
+
+      round.deliveryDate = nextDeliveryDate
+      round.postponeUsed = true
+      round.postponeOptions = []
+      return true
+    },
+
     schedulePlanChange(planId) {
       this.scheduledPlan = planId
     },
@@ -256,7 +365,12 @@ export const useAppStore = defineStore('app', {
     },
 
     openTrialSheet() {
-      if (this.trialStatus === 'ended' && !this.hasSeenTrialSheet) {
+      if (
+        this.isAuthenticated &&
+        this.isTrialUser &&
+        this.trialStatus === 'ended' &&
+        !this.hasSeenTrialSheet
+      ) {
         this.isTrialSheetOpen = true
         this.hasSeenTrialSheet = true
       }

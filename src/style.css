@@ -1,7 +1,7 @@
 :root {
   --color-primary: #96a75e;
   --color-primary-hover: #a4b46e;
-  --color-primary-pressed: #7d8e49;
+  --color-primary-pressed: #647238;
   --color-primary-soft: #f5f7ec;
   --color-secondary: #f28c28;
   --color-secondary-soft: #fff3e5;
@@ -9,7 +9,7 @@
   --color-surface: #ffffff;
   --color-surface-subtle: #f8f8f4;
   --color-text: #33352f;
-  --color-text-muted: #7b7f75;
+  --color-text-muted: #666b62;
   --color-border: #ecefe5;
   --color-disabled: #e1e4dc;
   --color-success: #5d8b70;
@@ -37,7 +37,8 @@ html {
 }
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 0;
+  width: 100%;
   background: var(--color-background);
 }
 button,
@@ -48,6 +49,14 @@ button {
   cursor: pointer;
 }
 button:focus-visible {
+  outline: 3px solid rgba(102, 137, 163, 0.55);
+  outline-offset: 3px;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
   outline: 3px solid rgba(102, 137, 163, 0.55);
   outline-offset: 3px;
 }
@@ -384,11 +393,17 @@ p {
   display: flex;
   flex-direction: column;
   padding: 29px;
-  border: 1px solid var(--color-border);
+  border: 2px solid transparent;
   border-radius: 24px;
   background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border);
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
-.plan-card--recommended {
+
+.plan-card--highlighted {
   border: 2px solid var(--color-secondary);
   background: #fffdf9;
   box-shadow: 0 16px 35px rgba(242, 140, 40, 0.1);
@@ -405,8 +420,8 @@ p {
   font-weight: 800;
   letter-spacing: 0.07em;
 }
-.plan-card--recommended .plan-eyebrow {
-  color: var(--color-secondary);
+.plan-card--highlighted .plan-eyebrow {
+  color: #a35d13;
 }
 .recommendation-badge {
   padding: 4px 8px;
@@ -1809,6 +1824,16 @@ p {
 .flow-check input {
   margin-top: 3px;
 }
+.flow-check span {
+  display: grid;
+  gap: 3px;
+}
+.flow-check strong {
+  color: var(--color-text);
+}
+.flow-check small {
+  color: var(--color-text-muted);
+}
 .flow-helper {
   padding: 14px;
   border-radius: 12px;
@@ -1911,24 +1936,41 @@ p {
   font-weight: 700;
 }
 
-.subscription-danger-zone {
+.subscription-settings {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  margin-top: 52px;
-  padding-top: 28px;
+  margin-top: 72px;
+  padding-top: 24px;
   border-top: 1px solid var(--color-border);
 }
 
-.subscription-danger-zone h2 {
+.subscription-settings h2 {
   margin-top: 6px;
-  font-size: 22px;
+  color: var(--color-text-muted);
+  font-size: 17px;
 }
 
-.subscription-danger-zone p:last-child {
+.subscription-settings p:last-child {
   margin-top: 6px;
+  color: var(--color-text-muted);
   font-size: 13px;
+}
+
+.subscription-settings__link {
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.subscription-settings__link:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .button-danger,
@@ -2113,6 +2155,33 @@ p {
   line-height: 1.5;
 }
 
+.retention-options {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+}
+
+.retention-options h2 {
+  margin-top: 5px;
+  font-size: 20px;
+}
+
+.retention-options p:last-child {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.retention-options__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .delivery-edit-form {
   display: grid;
   gap: 28px;
@@ -2144,12 +2213,20 @@ p {
 }
 
 @media (max-width: 760px) {
-  .subscription-danger-zone {
+  .subscription-settings {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .subscription-danger-zone .button {
+  .subscription-settings__link {
+    align-self: flex-end;
+  }
+
+  .retention-options__actions {
+    display: grid;
+  }
+
+  .retention-options__actions .button {
     width: 100%;
   }
 
@@ -3119,6 +3196,14 @@ button.history-list-item:hover {
   font-size: 12px;
 }
 
+.round-calendar__scroll-hint {
+  display: none;
+}
+
+.round-calendar__grid {
+  max-width: 100%;
+}
+
 .round-calendar__week,
 .round-calendar__days {
   display: grid;
@@ -3143,14 +3228,30 @@ button.history-list-item:hover {
   color: var(--color-text);
 }
 
+.round-calendar__days button:disabled {
+  cursor: default;
+  color: var(--color-text-muted);
+}
+
+.round-calendar__days button.is-empty {
+  border-color: transparent;
+  background: transparent;
+}
+
 .round-calendar__days button.has-delivery {
+  cursor: pointer;
   background: var(--color-primary-soft);
   color: var(--color-primary-pressed);
   font-weight: 900;
 }
 
 .round-calendar__days small {
+  max-width: 100%;
+  padding: 0 4px;
+  overflow: hidden;
   font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .round-detail-actions {
@@ -3158,6 +3259,70 @@ button.history-list-item:hover {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 16px;
+}
+
+.postpone-panel {
+  display: grid;
+  gap: 18px;
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid var(--color-primary);
+  border-radius: 16px;
+  background: var(--color-primary-soft);
+}
+
+.postpone-panel h2 {
+  margin-top: 5px;
+  font-size: 21px;
+}
+
+.postpone-panel p:last-child {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.postpone-date-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.postpone-date-grid label {
+  cursor: pointer;
+}
+
+.postpone-date-grid input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.postpone-date-grid span {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.postpone-date-grid input:checked + span {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(255, 123, 84, 0.15);
+}
+
+.postpone-date-grid input:focus-visible + span {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.postpone-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 /* 환불 상담 */
@@ -3668,8 +3833,33 @@ button.history-list-item:hover {
     gap: 6px;
   }
 
+  .round-calendar__scroll-hint {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+
+  .round-calendar__grid {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .round-calendar__week,
+  .round-calendar__days {
+    min-width: 700px;
+  }
+
   .round-calendar__days button {
-    min-height: 55px;
+    min-height: 76px;
+  }
+
+  .round-calendar__days small {
+    display: -webkit-box;
+    white-space: normal;
+    /* 긴 메뉴 이름은 두 줄까지만 보여주고 나머지는 자연스럽게 줄입니다. */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .round-detail-actions {
@@ -3677,6 +3867,18 @@ button.history-list-item:hover {
   }
 
   .round-detail-actions .button {
+    width: 100%;
+  }
+
+  .postpone-date-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .postpone-panel__actions {
+    display: grid;
+  }
+
+  .postpone-panel__actions .button {
     width: 100%;
   }
 
@@ -3742,5 +3944,630 @@ button.history-list-item:hover {
 
   .admin-confirm-panel .button {
     grid-column: 1 / -1;
+  }
+}
+
+/* 출시 전 시각 감사에서 확인한 공통 화면과 반응형 보정입니다. */
+.customer-footer__links button,
+.customer-footer__contact button {
+  min-height: 36px;
+  display: block;
+  padding: 5px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.customer-footer__links button:hover,
+.customer-footer__contact button:hover {
+  color: var(--color-primary-pressed);
+}
+
+.document-page,
+.support-page,
+.management-page {
+  max-width: 860px;
+}
+
+.document-page__header {
+  max-width: 700px;
+  margin-top: 38px;
+}
+
+.document-page__header h1 {
+  margin-top: 8px;
+  font-size: 42px;
+}
+
+.document-page__header > p:not(.section-kicker) {
+  margin-top: 14px;
+}
+
+.document-page__header span {
+  display: block;
+  margin-top: 18px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.document-page__content {
+  display: grid;
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.document-page__content article,
+.support-card,
+.faq-list,
+.notification-list,
+.account-settings-list,
+.account-danger-zone,
+.payment-register-card {
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+}
+
+.document-page__content article {
+  padding: 25px;
+}
+
+.document-page__content h2 {
+  font-size: 18px;
+}
+
+.document-page__content p {
+  margin-top: 9px;
+  font-size: 14px;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 42px;
+}
+
+.support-card {
+  padding: 26px;
+}
+
+.support-card > svg {
+  color: var(--color-primary-pressed);
+}
+
+.support-card h2 {
+  margin-top: 18px;
+  font-size: 20px;
+}
+
+.support-card p {
+  margin-top: 9px;
+  font-size: 14px;
+}
+
+.support-card span {
+  display: block;
+  margin-top: 15px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.support-card .button {
+  margin-top: 24px;
+}
+
+.faq-list {
+  margin-top: 22px;
+  padding: 28px;
+}
+
+.faq-list > div {
+  margin-bottom: 20px;
+}
+
+.faq-list article {
+  padding: 19px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.faq-list article p {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.system-state-page {
+  min-height: calc(100vh - 72px);
+  max-width: 620px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  margin: 0 auto;
+  padding: 72px 24px 150px;
+  text-align: center;
+}
+
+.system-state-page > svg {
+  margin-bottom: 20px;
+  color: var(--color-primary-pressed);
+}
+
+.system-state-page h1 {
+  margin-top: 9px;
+  font-size: 35px;
+}
+
+.system-state-page > p:not(.section-kicker) {
+  margin-top: 13px;
+}
+
+.system-state-page__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.notification-list {
+  overflow: hidden;
+  margin-top: 38px;
+}
+
+.notification-list article {
+  min-height: 98px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notification-list article:last-child {
+  border-bottom: 0;
+}
+
+.notification-list article.is-new {
+  background: var(--color-primary-soft);
+}
+
+.notification-list__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--color-surface);
+  color: var(--color-primary-pressed);
+}
+
+.notification-list article p {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.notification-list time {
+  align-self: start;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.account-settings-list {
+  overflow: hidden;
+  margin-top: 38px;
+}
+
+.account-settings-list article,
+.account-settings-list button {
+  width: 100%;
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  text-align: left;
+}
+
+.account-settings-list button:last-child {
+  border-bottom: 0;
+}
+
+.account-settings-list article > span,
+.account-settings-list button > svg {
+  color: var(--color-primary-pressed);
+}
+
+.account-settings-list p,
+.account-settings-list small {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.account-danger-zone {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+  padding: 22px;
+}
+
+.account-danger-zone > div {
+  display: flex;
+  gap: 13px;
+}
+
+.account-danger-zone > div > svg {
+  color: var(--color-danger);
+}
+
+.account-danger-zone p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.account-danger-zone button {
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
+  color: var(--color-text-muted);
+}
+
+.payment-register-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  margin-top: 38px;
+  padding: 28px;
+}
+
+.payment-register-card__icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-pressed);
+}
+
+.payment-register-card h2 {
+  font-size: 20px;
+}
+
+.payment-register-card ul {
+  display: grid;
+  gap: 11px;
+  padding: 0;
+  margin: 18px 0 0;
+  list-style: none;
+}
+
+.payment-register-card li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.payment-register-card li svg {
+  color: var(--color-success);
+}
+
+.payment-register-action {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.admin-access-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: #f5f6f0;
+}
+
+.admin-access-card {
+  width: min(100%, 460px);
+  padding: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-access-card__mark {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-pressed);
+}
+
+.admin-access-card h1 {
+  margin-top: 7px;
+  font-size: 32px;
+}
+
+.admin-access-card > p:not(.section-kicker) {
+  margin-top: 10px;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.admin-login-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-login-form input {
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
+}
+
+.admin-access-card > .text-button {
+  margin: 20px auto 0;
+}
+
+.admin-access-card--state .button {
+  width: 100%;
+  margin-top: 28px;
+}
+
+.admin-alert-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.admin-alert-list article {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 21px;
+  border: 1px solid var(--color-border);
+  border-radius: 17px;
+  background: var(--color-surface);
+}
+
+.admin-alert-list__icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--color-warning-soft);
+  color: #85651f;
+}
+
+.admin-alert-list small {
+  color: var(--color-danger);
+  font-weight: 800;
+}
+
+.admin-alert-list h2 {
+  margin-top: 4px;
+  font-size: 16px;
+}
+
+.admin-alert-list p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.brand-button,
+.header-auth-button,
+.icon-button {
+  min-height: 44px;
+}
+
+.header-auth-button,
+.icon-button {
+  min-width: 44px;
+}
+
+.text-button,
+.back-button,
+.customer-footer__links button,
+.customer-footer__contact button,
+.desktop-navigation button,
+.admin-outline-button,
+.subscription-settings__link,
+.admin-notification,
+[data-pc-group-section='pagebutton'],
+[data-pc-section='page'],
+.admin-panel__heading button,
+.admin-toolbar input {
+  min-height: 44px;
+}
+
+.admin-notification,
+[data-pc-group-section='pagebutton'],
+[data-pc-section='page'] {
+  min-width: 44px;
+}
+
+@media (max-width: 1024px) {
+  .admin-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    display: flex;
+    overflow: hidden;
+    padding: 16px 24px 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .admin-brand {
+    padding: 0;
+  }
+
+  .admin-sidebar nav {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-top: 14px;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+  }
+
+  .admin-sidebar nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-nav-group {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 4px;
+    margin-top: 0;
+  }
+
+  .admin-nav-group small {
+    display: none;
+  }
+
+  .admin-sidebar nav button {
+    min-height: 42px;
+    white-space: nowrap;
+  }
+
+  .admin-back-link {
+    position: absolute;
+    top: 14px;
+    right: 24px;
+    width: auto;
+    margin-top: 0;
+  }
+
+  .admin-main {
+    min-width: 0;
+    overflow-x: hidden;
+    padding: 38px 32px;
+  }
+
+  .admin-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-chart-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-table-panel,
+  .admin-data-table {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .document-page__header h1,
+  .system-state-page h1 {
+    font-size: 31px;
+  }
+
+  .notification-list article {
+    grid-template-columns: auto 1fr;
+  }
+
+  .notification-list time {
+    grid-column: 2;
+  }
+
+  .account-danger-zone,
+  .admin-alert-list article {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .account-danger-zone {
+    display: flex;
+  }
+
+  .admin-alert-list article {
+    grid-template-columns: auto 1fr;
+  }
+
+  .admin-alert-list .admin-outline-button {
+    grid-column: 1 / -1;
+  }
+
+  .payment-register-card {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-copy h1,
+  .page-intro h1 {
+    font-size: 33px;
+  }
+
+  .system-state-page__actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .system-state-page__actions .button {
+    width: 100%;
+  }
+
+  .admin-access-page {
+    padding: 16px;
+  }
+
+  .admin-access-card {
+    padding: 28px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -9,9 +9,9 @@ import {
   Package,
   Salad,
 } from 'lucide-vue-next'
-import CustomerHeader from './shared/components/CustomerHeader.vue'
-import CustomerFooter from './shared/components/CustomerFooter.vue'
-import TrialBottomSheet from './services/subscription/components/TrialBottomSheet.vue'
+import CustomerHeader from './shared/components/layout/CustomerHeader.vue'
+import CustomerFooter from './shared/components/layout/CustomerFooter.vue'
+import TrialBottomSheet from './domain/subscription/components/TrialBottomSheet.vue'
 import { useAppStore } from './stores/useAppStore'
 
 const appStore = useAppStore()
@@ -42,6 +42,7 @@ const activeNavigation = computed(() => {
       'plans',
       'wf-011',
       'wf-012',
+      'plan-family-detail',
       'wf-013',
       'wf-014',
       'wf-016',
@@ -62,7 +63,11 @@ const activeNavigation = computed(() => {
   }
 
   // 정규식은 WF-027부터 WF-036까지의 이름인지 한 번에 확인하는 JavaScript 문법입니다.
-  if (routeName === 'mypage' || /^wf-0(2[7-9]|3[0-6])$/.test(routeName)) {
+  if (
+    routeName === 'mypage' ||
+    ['notifications', 'account-settings', 'payment-method-register'].includes(routeName) ||
+    /^wf-0(2[7-9]|3[0-6])$/.test(routeName)
+  ) {
     return 'mypage'
   }
 
@@ -105,7 +110,7 @@ function navigate(view) {
           />
         </RouterView>
       </section>
-      <CustomerFooter />
+      <CustomerFooter @navigate="navigate" />
 
       <nav class="bottom-navigation" aria-label="주요 메뉴" v-auto-animate>
         <!-- v-auto-animate는 목록의 선택·추가·삭제 변화에 부드러운 움직임을 더하는 지시어입니다. -->

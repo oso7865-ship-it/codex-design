@@ -2,37 +2,46 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { pageCatalog } from './pageCatalog'
 
 // 동적 import는 방문한 페이지의 코드만 내려받아 첫 화면의 파일 크기를 줄입니다.
-const AddressFormPage = () => import('../services/account/pages/AddressFormPage.vue')
-const AddressListPage = () => import('../services/account/pages/AddressListPage.vue')
-const AdminDashboard = () => import('../services/admin/pages/AdminDashboard.vue')
-const AdminWorkspacePage = () => import('../services/admin/pages/AdminWorkspacePage.vue')
-const AuthPage = () => import('../services/auth/pages/AuthPage.vue')
-const DeliveryDetailPage = () => import('../services/account/pages/DeliveryDetailPage.vue')
-const DeliveryEditPage = () => import('../services/subscription/pages/DeliveryEditPage.vue')
-const DeliveryHistoryPage = () => import('../services/account/pages/DeliveryHistoryPage.vue')
-const HomePage = () => import('../services/home/pages/HomePage.vue')
-const MenuDetailPage = () => import('../services/menu/pages/MenuDetailPage.vue')
-const MenuListPage = () => import('../services/menu/pages/MenuListPage.vue')
-const MenuBuilder = () => import('../services/menu/pages/MenuBuilder.vue')
-const MyPage = () => import('../services/account/pages/MyPage.vue')
-const MyProfilePage = () => import('../services/account/pages/MyProfilePage.vue')
-const PaymentDetailPage = () => import('../services/account/pages/PaymentDetailPage.vue')
-const PaymentHistoryPage = () => import('../services/account/pages/PaymentHistoryPage.vue')
-const PaymentMethodListPage = () => import('../services/account/pages/PaymentMethodListPage.vue')
-const PlanChangePage = () => import('../services/subscription/pages/PlanChangePage.vue')
-const PlanDetailPage = () => import('../services/plans/pages/PlanDetailPage.vue')
-const PlanPage = () => import('../services/plans/pages/PlanPage.vue')
-const RefundChatPage = () => import('../services/account/pages/RefundChatPage.vue')
-const RefundHistoryPage = () => import('../services/account/pages/RefundHistoryPage.vue')
+const AddressFormPage = () => import('../domain/account/pages/AddressFormPage.vue')
+const AddressListPage = () => import('../domain/account/pages/AddressListPage.vue')
+const AccountSettingsPage = () => import('../domain/account/pages/AccountSettingsPage.vue')
+const AdminAccessPage = () => import('../domain/admin/pages/AdminAccessPage.vue')
+const AdminDashboard = () => import('../domain/admin/pages/AdminDashboard.vue')
+const AdminNotificationPage = () => import('../domain/admin/pages/AdminNotificationPage.vue')
+const AdminWorkspacePage = () => import('../domain/admin/pages/AdminWorkspacePage.vue')
+const AuthPage = () => import('../domain/auth/pages/AuthPage.vue')
+const CustomerSupportPage = () => import('../domain/home/pages/CustomerSupportPage.vue')
+const DeliveryDetailPage = () => import('../domain/account/pages/DeliveryDetailPage.vue')
+const DeliveryEditPage = () => import('../domain/subscription/pages/DeliveryEditPage.vue')
+const DeliveryHistoryPage = () => import('../domain/account/pages/DeliveryHistoryPage.vue')
+const HomePage = () => import('../domain/home/pages/HomePage.vue')
+const MenuDetailPage = () => import('../domain/menu/pages/MenuDetailPage.vue')
+const MenuListPage = () => import('../domain/menu/pages/MenuListPage.vue')
+const MenuBuilder = () => import('../domain/menu/pages/MenuBuilder.vue')
+const MyPage = () => import('../domain/account/pages/MyPage.vue')
+const MyProfilePage = () => import('../domain/account/pages/MyProfilePage.vue')
+const NotificationPage = () => import('../domain/account/pages/NotificationPage.vue')
+const PaymentDetailPage = () => import('../domain/account/pages/PaymentDetailPage.vue')
+const PaymentHistoryPage = () => import('../domain/account/pages/PaymentHistoryPage.vue')
+const PaymentMethodListPage = () => import('../domain/account/pages/PaymentMethodListPage.vue')
+const PaymentMethodRegistrationPage = () =>
+  import('../domain/account/pages/PaymentMethodRegistrationPage.vue')
+const PlanChangePage = () => import('../domain/subscription/pages/PlanChangePage.vue')
+const PlanDetailPage = () => import('../domain/plans/pages/PlanDetailPage.vue')
+const PlanPage = () => import('../domain/plans/pages/PlanPage.vue')
+const RefundChatPage = () => import('../domain/account/pages/RefundChatPage.vue')
+const RefundHistoryPage = () => import('../domain/account/pages/RefundHistoryPage.vue')
 const SubscriptionCancelPage = () =>
-  import('../services/subscription/pages/SubscriptionCancelPage.vue')
-const SubscriptionFlowPage = () => import('../services/subscription/pages/SubscriptionFlowPage.vue')
-const SubscriptionListPage = () => import('../services/subscription/pages/SubscriptionListPage.vue')
-const SubscriptionPage = () => import('../services/subscription/pages/SubscriptionPage.vue')
+  import('../domain/subscription/pages/SubscriptionCancelPage.vue')
+const SubscriptionFlowPage = () => import('../domain/subscription/pages/SubscriptionFlowPage.vue')
+const SubscriptionListPage = () => import('../domain/subscription/pages/SubscriptionListPage.vue')
+const SubscriptionPage = () => import('../domain/subscription/pages/SubscriptionPage.vue')
 const SubscriptionRoundDetailPage = () =>
-  import('../services/subscription/pages/SubscriptionRoundDetailPage.vue')
+  import('../domain/subscription/pages/SubscriptionRoundDetailPage.vue')
 const SubscriptionRoundsPage = () =>
-  import('../services/subscription/pages/SubscriptionRoundsPage.vue')
+  import('../domain/subscription/pages/SubscriptionRoundsPage.vue')
+const LegalDocumentPage = () => import('../domain/home/pages/LegalDocumentPage.vue')
+const SystemStatePage = () => import('../domain/home/pages/SystemStatePage.vue')
 
 const authRoutes = pageCatalog
   .filter((page) => ['002', '003', '004', '005', '006', '007'].includes(page.id))
@@ -78,6 +87,12 @@ const router = createRouter({
       component: PlanDetailPage,
       props: { planId: 'trial' },
     },
+    {
+      path: '/plans/family',
+      name: 'plan-family-detail',
+      component: PlanDetailPage,
+      props: { planId: 'family' },
+    },
     { path: '/subscription', name: 'subscription', component: SubscriptionPage },
     { path: '/subscription/list', name: 'wf-020', component: SubscriptionListPage },
     { path: '/subscription/rounds', name: 'wf-022', component: SubscriptionRoundsPage },
@@ -108,10 +123,21 @@ const router = createRouter({
       component: DeliveryEditPage,
     },
     { path: '/mypage', name: 'mypage', component: MyPage },
+    { path: '/mypage/notifications', name: 'notifications', component: NotificationPage },
+    {
+      path: '/mypage/account-settings',
+      name: 'account-settings',
+      component: AccountSettingsPage,
+    },
     { path: '/mypage/profile', name: 'wf-027', component: MyProfilePage },
     { path: '/mypage/addresses', name: 'wf-028', component: AddressListPage },
     { path: '/mypage/addresses/new', name: 'wf-029', component: AddressFormPage },
     { path: '/mypage/payment-methods', name: 'wf-030', component: PaymentMethodListPage },
+    {
+      path: '/mypage/payment-methods/register',
+      name: 'payment-method-register',
+      component: PaymentMethodRegistrationPage,
+    },
     { path: '/mypage/payments', name: 'wf-031', component: PaymentHistoryPage },
     { path: '/mypage/payments/detail', name: 'wf-032', component: PaymentDetailPage },
     { path: '/mypage/deliveries', name: 'wf-033', component: DeliveryHistoryPage },
@@ -119,6 +145,33 @@ const router = createRouter({
     { path: '/mypage/refunds', name: 'wf-035', component: RefundHistoryPage },
     { path: '/mypage/refunds/chat', name: 'wf-036', component: RefundChatPage },
     { path: '/admin', name: 'admin', component: AdminDashboard },
+    {
+      path: '/admin/login',
+      name: 'admin-login',
+      component: AdminAccessPage,
+      props: { mode: 'login' },
+      meta: { area: 'admin' },
+    },
+    {
+      path: '/admin/access-denied',
+      name: 'admin-access-denied',
+      component: AdminAccessPage,
+      props: { mode: 'denied' },
+      meta: { area: 'admin' },
+    },
+    {
+      path: '/admin/session-expired',
+      name: 'admin-session-expired',
+      component: AdminAccessPage,
+      props: { mode: 'expired' },
+      meta: { area: 'admin' },
+    },
+    {
+      path: '/admin/notifications',
+      name: 'admin-notifications',
+      component: AdminNotificationPage,
+      meta: { area: 'admin' },
+    },
     ...adminRoutes,
     {
       path: '/subscribe/delivery',
@@ -155,6 +208,41 @@ const router = createRouter({
       name: 'wf-019',
       component: SubscriptionFlowPage,
       props: { step: 7 },
+    },
+    {
+      path: '/support',
+      name: 'customer-support',
+      component: CustomerSupportPage,
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: LegalDocumentPage,
+      props: { documentType: 'terms' },
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: LegalDocumentPage,
+      props: { documentType: 'privacy' },
+    },
+    {
+      path: '/location-terms',
+      name: 'location-terms',
+      component: LegalDocumentPage,
+      props: { documentType: 'location' },
+    },
+    {
+      path: '/service-error',
+      name: 'service-error',
+      component: SystemStatePage,
+      props: { state: 'error' },
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: SystemStatePage,
+      props: { state: 'not-found' },
     },
   ],
 })
