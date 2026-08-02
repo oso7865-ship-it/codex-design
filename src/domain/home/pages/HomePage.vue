@@ -1,74 +1,30 @@
 <script setup>
-import { ArrowRight, CalendarCheck2, CheckCircle2, Sparkles } from 'lucide-vue-next'
+import HomeFaqSection from '../components/HomeFaqSection.vue'
+import HomeHeroCarousel from '../components/HomeHeroCarousel.vue'
+import HomeMenuCarousel from '../components/HomeMenuCarousel.vue'
+import HomeRoutineSection from '../components/HomeRoutineSection.vue'
+import HomeSubscriptionCta from '../components/HomeSubscriptionCta.vue'
 
+// defineEmits는 자식 페이지가 App.vue에 화면 이동을 요청할 때 사용하는 Vue 문법입니다.
+// 메인 전용 컴포넌트에서 받은 이동 요청을 상위 App.vue로 그대로 전달합니다.
 const emit = defineEmits(['navigate'])
 </script>
 
 <template>
   <div class="page page-home">
-    <section class="hero-section">
-      <div class="hero-copy">
-        <p class="eyebrow"><Sparkles :size="15" aria-hidden="true" /> 내 일정에 맞춘 식사 구독</p>
-        <h1>잘 먹는 일상을,<br />가볍게 이어가요.</h1>
-        <p class="hero-description">
-          필요한 날에 맞춰 메뉴를 고르고, 챱챱이 준비한 식사를 정기적으로 받아보세요.
-        </p>
-        <div class="hero-actions">
-          <button class="button button-primary" type="button" @click="emit('navigate', 'plans')">
-            플랜 살펴보기 <ArrowRight :size="18" aria-hidden="true" />
-          </button>
-          <button class="text-button" type="button" @click="emit('navigate', 'menu')">
-            이번 주 메뉴 보기
-          </button>
-        </div>
-      </div>
+    <!-- 메인 첫 화면에서 서비스 소개와 체험 플랜을 번갈아 안내하는 영역입니다. -->
+    <HomeHeroCarousel @navigate="emit('navigate', $event)" />
 
-      <div
-        class="hero-photo-placeholder"
-        role="img"
-        aria-label="챱챱 식사 구독 히어로 사진이 들어갈 자리"
-      >
-        <span>사진이 필요한 곳입니다.</span>
-      </div>
-    </section>
+    <!-- 구독을 시작하는 기본 순서를 세 단계로 설명하는 영역입니다. -->
+    <HomeRoutineSection />
 
-    <section class="section-block">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">CHOPCHOP ROUTINE</p>
-          <h2>구독은 어렵지 않아요</h2>
-        </div>
-      </div>
-      <div class="routine-grid">
-        <article class="routine-card">
-          <span class="routine-number">01</span>
-          <CalendarCheck2 :size="24" aria-hidden="true" />
-          <h3>내 일정에 맞춰 설정</h3>
-          <p>플랜과 배송 요일을 먼저 선택해요.</p>
-        </article>
-        <article class="routine-card">
-          <span class="routine-number">02</span>
-          <CheckCircle2 :size="24" aria-hidden="true" />
-          <h3>포함 메뉴를 구성</h3>
-          <p>플랜 범위 안에서 원하는 메뉴를 담아요.</p>
-        </article>
-        <article class="routine-card routine-card--accent">
-          <span class="routine-number">03</span>
-          <Sparkles :size="24" aria-hidden="true" />
-          <h3>정기적으로 받아보기</h3>
-          <p>다음 배송과 결제 일정도 한눈에 확인해요.</p>
-        </article>
-      </div>
-    </section>
+    <!-- 실제 메뉴 목록으로 이동하기 전에 이번 메뉴를 미리 확인하는 영역입니다. -->
+    <HomeMenuCarousel @navigate="emit('navigate', $event)" />
 
-    <section class="plan-prompt">
-      <div>
-        <p class="section-kicker">FOR YOUR ROUTINE</p>
-        <h2>나에게 맞는 플랜부터<br />찾아볼까요?</h2>
-      </div>
-      <button class="button button-secondary" type="button" @click="emit('navigate', 'plans')">
-        플랜 비교하기
-      </button>
-    </section>
+    <!-- 메인에서 자주 묻는 내용을 바로 확인하고 고객지원으로 연결하는 영역입니다. -->
+    <HomeFaqSection @navigate="emit('navigate', $event)" />
+
+    <!-- 모든 안내를 확인한 사용자가 구독 또는 플랜 비교를 시작하는 마지막 영역입니다. -->
+    <HomeSubscriptionCta @navigate="emit('navigate', $event)" />
   </div>
 </template>
