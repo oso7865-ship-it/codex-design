@@ -29,20 +29,6 @@ const emit = defineEmits(['navigate'])
     <nav class="desktop-navigation" aria-label="상단 메뉴">
       <button
         type="button"
-        :class="{ 'is-active': currentView === 'menu' }"
-        @click="emit('navigate', 'menu')"
-      >
-        메뉴
-      </button>
-      <button
-        type="button"
-        :class="{ 'is-active': currentView === 'plans' }"
-        @click="emit('navigate', 'plans')"
-      >
-        플랜
-      </button>
-      <button
-        type="button"
         :class="{ 'is-active': currentView === 'subscription' }"
         @click="emit('navigate', 'subscription')"
       >
