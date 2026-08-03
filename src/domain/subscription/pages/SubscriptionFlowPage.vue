@@ -1,7 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { CheckCircle2, ChevronRight, MapPin, Truck } from 'lucide-vue-next'
+import { CheckCircle2, ChevronRight, MapPin, Plus, Truck } from 'lucide-vue-next'
 import { useAppStore } from '../../../stores/useAppStore'
+import {
+  MINIMUM_DELIVERY_DATE_COUNT,
+  formatDeliveryDateList,
+  hasMinimumDeliveryDatesForEachWeek,
+} from '../../../utils/deliveryPolicy'
+import DeliveryDateCalendar from '../../../shared/components/forms/DeliveryDateCalendar.vue'
 
 const props = defineProps({
   step: {
@@ -14,7 +20,6 @@ const emit = defineEmits(['navigate'])
 const appStore = useAppStore()
 
 const steps = ['배송', '배송지', '메뉴', '확인', '결제']
-const deliveryDays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
 const addresses = [
   {
     id: 'home',
@@ -38,6 +43,10 @@ const selectedAddressName = computed(() => {
   return selectedAddress ? selectedAddress.name : '선택 필요'
 })
 
+const defaultPaymentMethod = computed(
+  () => appStore.paymentMethods.find((paymentMethod) => paymentMethod.isDefault) || null,
+)
+
 const next = {
   1: 'wf-014',
   2: 'subscribe-menu',
@@ -54,8 +63,11 @@ function selectAddress(addressId) {
 function goNext() {
   validationMessage.value = ''
 
-  if (props.step === 1 && appStore.subscriptionApplication.deliveryDays.length === 0) {
-    validationMessage.value = '배송받을 요일을 최소 1개 선택해주세요.'
+  if (
+    props.step === 1 &&
+    !hasMinimumDeliveryDatesForEachWeek(appStore.subscriptionApplication.deliveryDays)
+  ) {
+    validationMessage.value = '1주차와 2주차에 배송 희망일을 각각 3개 이상 선택해주세요.'
     return
   }
 
@@ -90,18 +102,15 @@ function goNext() {
 
     <section v-if="step === 1" class="flow-panel">
       <p class="section-kicker">STEP 1</p>
-      <h1>받기 좋은 요일과<br />시간을 골라주세요.</h1>
-      <div class="choice-grid">
-        <button
-          v-for="day in deliveryDays"
-          :key="day"
-          type="button"
-          :class="{ 'is-selected': appStore.subscriptionApplication.deliveryDays.includes(day) }"
-          @click="appStore.toggleDeliveryDay(day)"
+      <h1>받기 좋은 날짜와<br />시간을 골라주세요.</h1>
+      <DeliveryDateCalendar v-model="appStore.subscriptionApplication.deliveryDays" />
+      <p class="form-help">
+        1주차와 2주차에 배송 희망일을 각각 최소 {{ MINIMUM_DELIVERY_DATE_COUNT }}개 선택해주세요.
+        <strong
+          >{{ appStore.subscriptionApplication.deliveryDays.length }} /
+          {{ MINIMUM_DELIVERY_DATE_COUNT }}개씩 선택</strong
         >
-          {{ day }}
-        </button>
-      </div>
+      </p>
       <label>
         배송 시간
         <select v-model="appStore.subscriptionApplication.deliveryTime">
@@ -154,7 +163,7 @@ function goNext() {
         <div>
           <dt>배송</dt>
           <dd>
-            {{ appStore.subscriptionApplication.deliveryDays.join('·') }} ·
+            {{ formatDeliveryDateList(appStore.subscriptionApplication.deliveryDays) }} ·
             {{ appStore.subscriptionApplication.deliveryTime }}
           </dd>
         </div>
@@ -172,12 +181,26 @@ function goNext() {
     <section v-else-if="step === 5" class="flow-panel">
       <p class="section-kicker">STEP 5</p>
       <h1>결제수단을<br />확인해주세요.</h1>
-      <button class="address-choice is-selected" type="button">
+      <button v-if="defaultPaymentMethod" class="address-choice is-selected" type="button">
         <span>
           <strong>등록된 카드</strong>
-          <small>**** **** **** 1234</small>
+          <small
+            >{{ defaultPaymentMethod.brand }} · ****
+            {{ defaultPaymentMethod.lastFourDigits }}</small
+          >
         </span>
         <CheckCircle2 :size="20" />
+      </button>
+      <p v-else class="form-help" role="status">
+        등록된 카드가 없습니다. 카드 등록 후 결제 수단을 선택해주세요.
+      </p>
+      <button
+        class="button button-outline"
+        type="button"
+        @click="emit('navigate', 'payment-method-register')"
+      >
+        <Plus :size="18" aria-hidden="true" />
+        카드 등록하기
       </button>
       <label class="flow-check">
         <input v-model="appStore.subscriptionApplication.isAutoPaymentAgreed" type="checkbox" />

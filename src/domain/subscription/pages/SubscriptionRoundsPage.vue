@@ -136,7 +136,11 @@ function openRoundDetail(roundId) {
           <span class="history-list-item__aside">
             <StatusBadge :status="round.status" />
             <b>
-              {{ round.canEditMenu ? `변경 마감 ${round.changeDeadline}` : '메뉴 변경 마감' }}
+              {{
+                appStore.isRoundChangeAllowed(round)
+                  ? `변경 마감 ${appStore.formatRoundChangeDeadline(round)}`
+                  : '메뉴·배송 조건 변경 마감'
+              }}
             </b>
           </span>
         </span>

@@ -1,6 +1,7 @@
 <script setup>
 import { CalendarDays, ChevronRight, Clock3, MapPin, Pencil, ReceiptText } from 'lucide-vue-next'
 import { formatDeliveryDate } from '../../../utils/date'
+import { formatDeliveryDateList } from '../../../utils/deliveryPolicy'
 import { useAppStore } from '../../../stores/useAppStore'
 import EmptyState from '../../../shared/components/feedback/EmptyState.vue'
 
@@ -21,10 +22,7 @@ const planNames = {
       <h1>내 식사 구독을<br />한눈에 관리하세요.</h1>
       <p>
         이번 회차의 변경 마감은
-        <strong
-          >{{ formatDeliveryDate(appStore.currentSubscription.dates.changeDeadline) }} 오후
-          6시</strong
-        >입니다.
+        <strong>{{ formatDeliveryDate(appStore.currentChangeDeadline) }} 오후 6시</strong>입니다.
       </p>
     </section>
 
@@ -158,7 +156,7 @@ const planNames = {
             <strong>{{ appStore.selectedAddress.name }}</strong>
             <small>{{ appStore.selectedAddress.address }}</small>
             <small>
-              {{ appStore.currentSubscription.deliveryDays.join('·') }} ·
+              {{ formatDeliveryDateList(appStore.currentSubscription.deliveryDays) }} ·
               {{ appStore.currentSubscription.deliveryTime }}
             </small>
           </span>

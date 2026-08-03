@@ -12,6 +12,8 @@ const selectedPostponeDate = ref('')
 
 // computed는 사용자가 목록에서 선택한 회차가 바뀌면 상세 내용도 함께 바꿉니다.
 const round = computed(() => appStore.selectedRound)
+const canChangeRound = computed(() => appStore.isRoundChangeAllowed(round.value))
+const changeDeadline = computed(() => appStore.formatRoundChangeDeadline(round.value))
 const canPostpone = computed(() => {
   return !round.value.postponeUsed && round.value.postponeOptions.length > 0
 })
@@ -71,7 +73,7 @@ function confirmPostpone() {
         </div>
         <div>
           <dt>변경 마감</dt>
-          <dd>{{ round.changeDeadline }}</dd>
+          <dd>{{ changeDeadline }}</dd>
         </div>
       </dl>
     </section>
@@ -80,7 +82,7 @@ function confirmPostpone() {
       <button
         class="button button-secondary"
         type="button"
-        :disabled="!round.canEditMenu"
+        :disabled="!canChangeRound"
         @click="emit('navigate', 'wf-024')"
       >
         <Pencil :size="17" aria-hidden="true" />
@@ -89,7 +91,7 @@ function confirmPostpone() {
       <button
         class="button button-primary"
         type="button"
-        :disabled="!round.canEditDelivery"
+        :disabled="!canChangeRound"
         @click="emit('navigate', 'wf-025')"
       >
         배송 조건 변경
@@ -132,7 +134,11 @@ function confirmPostpone() {
       <div>
         <strong>변경 마감 안내</strong>
         <p>
-          {{ round.menuEditDisabledReason || '마감 전까지 메뉴와 배송 조건을 변경할 수 있습니다.' }}
+          {{
+            canChangeRound
+              ? '배송 3일 전 오후 6시까지 메뉴와 배송 조건을 변경할 수 있습니다.'
+              : round.menuEditDisabledReason
+          }}
         </p>
         <p v-if="round.postponeUsed">이 회차는 배송 일정 미루기 1회를 이미 사용했습니다.</p>
       </div>
