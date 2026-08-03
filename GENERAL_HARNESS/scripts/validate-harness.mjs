@@ -71,7 +71,9 @@ const requiredFiles = [
   'scripts/validate-package.mjs',
   'scripts/validate-no-personal-paths.mjs',
   'scripts/validate-references.mjs',
-  'scripts/validate-report-consistency.mjs'
+  'scripts/validate-report-consistency.mjs',
+  'scripts/validate-no-secrets.mjs',
+  'scripts/harness-stats.mjs'
 ];
 
 const requiredDirs = ['skills', 'gates', 'checklists', 'reports', 'scripts'];

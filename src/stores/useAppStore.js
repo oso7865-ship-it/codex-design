@@ -1,4 +1,11 @@
 import { defineStore } from 'pinia'
+import {
+  formatDeliveryChangeDeadline,
+  getDeliveryChangeDeadline,
+  hasMinimumDeliveryDatesForEachWeek,
+  isDeliveryDateAvailable,
+  isDeliveryChangeAllowed,
+} from '../utils/deliveryPolicy'
 
 const emptyMenuQuantities = {
   1: 0,
@@ -6,6 +13,11 @@ const emptyMenuQuantities = {
   3: 0,
   4: 0,
 }
+
+const createEmptyWeeklyMenuQuantities = () => ({
+  week1: { ...emptyMenuQuantities },
+  week2: { ...emptyMenuQuantities },
+})
 
 const currentMenuQuantities = {
   1: 2,
@@ -21,14 +33,11 @@ const initialSubscriptionRounds = [
     deliveryDate: '2026-08-03',
     status: '주문 마감',
     addressName: '집',
-    changeDeadline: '2026-08-01 18:00',
     menuItems: [
       { name: '바질 닭가슴살 덮밥', quantity: 2 },
       { name: '단호박 소불고기 덮밥', quantity: 1 },
     ],
-    canEditMenu: false,
-    menuEditDisabledReason: '배송 준비가 시작되어 이번 회차의 메뉴 변경이 마감되었습니다.',
-    canEditDelivery: false,
+    menuEditDisabledReason: '배송 3일 전 오후 6시가 지나 이번 회차의 변경이 마감되었습니다.',
     postponeUsed: false,
     postponeOptions: ['2026-08-04', '2026-08-05', '2026-08-06'],
   },
@@ -38,14 +47,11 @@ const initialSubscriptionRounds = [
     deliveryDate: '2026-08-10',
     status: '배송 예정',
     addressName: '집',
-    changeDeadline: '2026-08-08 18:00',
     menuItems: [
       { name: '두부 채소 비빔밥', quantity: 1 },
       { name: '바질 닭가슴살 덮밥', quantity: 2 },
     ],
-    canEditMenu: true,
     menuEditDisabledReason: '',
-    canEditDelivery: true,
     postponeUsed: true,
     postponeOptions: [],
   },
@@ -55,14 +61,11 @@ const initialSubscriptionRounds = [
     deliveryDate: '2026-07-26',
     status: '배송 완료',
     addressName: '집',
-    changeDeadline: '마감',
     menuItems: [
       { name: '바질 닭가슴살 덮밥', quantity: 2 },
       { name: '단호박 소불고기 덮밥', quantity: 1 },
     ],
-    canEditMenu: false,
     menuEditDisabledReason: '이미 배송이 완료된 회차입니다.',
-    canEditDelivery: false,
     postponeUsed: true,
     postponeOptions: [],
   },
@@ -164,10 +167,11 @@ export const useAppStore = defineStore('app', {
     // subscriptionApplication은 신청이 완료되기 전까지만 사용하는 임시 입력값입니다.
     selectedPlan: 'solo',
     subscriptionApplication: {
-      deliveryDays: ['월요일'],
+      deliveryDays: [],
       deliveryTime: '점심 · 11:00~13:00',
       selectedAddressId: 'home',
       menuQuantities: { ...emptyMenuQuantities },
+      weeklyMenuQuantities: createEmptyWeeklyMenuQuantities(),
       isAutoPaymentAgreed: false,
     },
 
@@ -175,14 +179,20 @@ export const useAppStore = defineStore('app', {
     currentSubscription: {
       planId: 'solo',
       status: 'active',
-      deliveryDays: ['월요일'],
+      deliveryDays: [
+        '2026-08-03',
+        '2026-08-04',
+        '2026-08-05',
+        '2026-08-10',
+        '2026-08-12',
+        '2026-08-14',
+      ],
       deliveryTime: '점심 · 11:00~13:00',
       selectedAddressId: 'home',
       menuQuantities: { ...currentMenuQuantities },
       dates: {
         nextDelivery: '2026-08-03',
         nextPayment: '2026-08-09',
-        changeDeadline: '2026-08-01T18:00:00',
       },
     },
 
@@ -203,9 +213,27 @@ export const useAppStore = defineStore('app', {
   getters: {
     // Object.values는 객체의 값만 배열로 꺼내고 reduce는 수량을 차례로 더합니다.
     selectedMenuCount: (state) =>
-      Object.values(state.subscriptionApplication.menuQuantities).reduce(
-        (total, quantity) => total + quantity,
+      Object.values(state.subscriptionApplication.weeklyMenuQuantities).reduce(
+        (total, weekQuantities) =>
+          total +
+          Object.values(weekQuantities).reduce((weekTotal, quantity) => weekTotal + quantity, 0),
         0,
+      ),
+
+    weeklySelectedMenuCounts: (state) =>
+      Object.fromEntries(
+        Object.entries(state.subscriptionApplication.weeklyMenuQuantities).map(
+          ([week, quantities]) => [
+            week,
+            Object.values(quantities).reduce((total, quantity) => total + quantity, 0),
+          ],
+        ),
+      ),
+
+    hasRequiredWeeklyMenuSelections: (state) =>
+      Object.values(state.subscriptionApplication.weeklyMenuQuantities).every(
+        (quantities) =>
+          Object.values(quantities).reduce((total, quantity) => total + quantity, 0) >= 3,
       ),
 
     currentMenuCount: (state) =>
@@ -245,7 +273,15 @@ export const useAppStore = defineStore('app', {
 
     currentRound: (state) => state.subscriptionRounds[0],
 
-    canEditCurrentDelivery: (state) => Boolean(state.subscriptionRounds[0]?.canEditMenu),
+    currentChangeDeadline: (state) =>
+      getDeliveryChangeDeadline(state.currentSubscription.dates.nextDelivery),
+
+    canEditCurrentDelivery: (state) =>
+      isDeliveryChangeAllowed(state.currentSubscription.dates.nextDelivery),
+
+    isRoundChangeAllowed: () => (round) => isDeliveryChangeAllowed(round.deliveryDate),
+
+    formatRoundChangeDeadline: () => (round) => formatDeliveryChangeDeadline(round.deliveryDate),
   },
 
   actions: {
@@ -285,40 +321,62 @@ export const useAppStore = defineStore('app', {
 
     beginSubscriptionApplication(planId) {
       this.selectedPlan = planId
+      this.subscriptionApplication.deliveryDays = []
       this.subscriptionApplication.menuQuantities = { ...emptyMenuQuantities }
+      this.subscriptionApplication.weeklyMenuQuantities = createEmptyWeeklyMenuQuantities()
       this.subscriptionApplication.isAutoPaymentAgreed = false
     },
 
-    toggleDeliveryDay(day) {
+    toggleDeliveryDate(date) {
       const { deliveryDays } = this.subscriptionApplication
-      const dayIndex = deliveryDays.indexOf(day)
+      const dateIndex = deliveryDays.indexOf(date)
 
-      if (dayIndex >= 0) {
-        deliveryDays.splice(dayIndex, 1)
-        return
+      if (dateIndex >= 0) {
+        deliveryDays.splice(dateIndex, 1)
+        return true
       }
 
-      deliveryDays.push(day)
+      if (!isDeliveryDateAvailable(date)) {
+        return false
+      }
+
+      deliveryDays.push(date)
+      deliveryDays.sort()
+      return true
     },
 
-    changeMenuQuantity(menuId, change) {
-      const quantities = this.subscriptionApplication.menuQuantities
+    changeMenuQuantity(menuId, change, week = 'week1') {
+      const quantities = this.subscriptionApplication.weeklyMenuQuantities[week]
       const nextQuantity = Math.max(0, quantities[menuId] + change)
       quantities[menuId] = nextQuantity
+
+      // 기존 신청 데이터와 현재 회차 메뉴 표시는 1주차 구성을 사용합니다.
+      this.subscriptionApplication.menuQuantities = {
+        ...this.subscriptionApplication.weeklyMenuQuantities.week1,
+      }
     },
 
     completeSubscriptionApplication() {
+      if (!hasMinimumDeliveryDatesForEachWeek(this.subscriptionApplication.deliveryDays)) {
+        return false
+      }
+
+      if (!this.hasRequiredWeeklyMenuSelections) {
+        return false
+      }
+
       this.currentSubscription.planId = this.selectedPlan
       this.currentSubscription.deliveryDays = [...this.subscriptionApplication.deliveryDays]
       this.currentSubscription.deliveryTime = this.subscriptionApplication.deliveryTime
       this.currentSubscription.selectedAddressId = this.subscriptionApplication.selectedAddressId
       this.currentSubscription.menuQuantities = {
-        ...this.subscriptionApplication.menuQuantities,
+        ...this.subscriptionApplication.weeklyMenuQuantities.week1,
       }
       this.currentSubscription.status = 'active'
       this.scheduledPlan = ''
       this.isCancellationScheduled = false
       this.trialStatus = 'converted'
+      return true
     },
 
     replaceMenuQuantities(quantities) {
@@ -326,9 +384,14 @@ export const useAppStore = defineStore('app', {
     },
 
     updateDeliveryConditions({ deliveryDays, deliveryTime, selectedAddressId }) {
+      if (!hasMinimumDeliveryDatesForEachWeek(deliveryDays)) {
+        return false
+      }
+
       this.currentSubscription.deliveryDays = [...deliveryDays]
       this.currentSubscription.deliveryTime = deliveryTime
       this.currentSubscription.selectedAddressId = selectedAddressId
+      return true
     },
 
     selectPayment(paymentId) {

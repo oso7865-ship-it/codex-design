@@ -9,7 +9,7 @@ const faqItems = [
   {
     id: 'delivery-day',
     question: '배송 희망일은 어떻게 선택하나요?',
-    answer: '구독 신청 단계에서 운영 가능한 요일 중 원하는 배송 희망일 3일을 선택할 수 있습니다.',
+    answer: '구독 신청 단계에서 캘린더의 원하는 배송 희망일을 3일 이상 선택할 수 있습니다.',
   },
   {
     id: 'change-deadline',

@@ -106,7 +106,7 @@
 
 이 산출물에 어떤 Gate가 필요한지는 `08.QUALITY_GATE.md`의 §7-2 표가 유일한 SoT다 — 이 스킬은 그 표를 다시 옮겨 적지 않는다. 일반적으로 `gates/ui-ux-gate.md`가 적용되며, 화면 성격에 따라 `gates/security-gate.md`, `gates/payment-gate.md`, `gates/api-gate.md`가 함께 누적될 수 있다.
 
-대상이 SRS/화면 목록 기반이면 `checklists/ui-ux-checklist.md`를 추가 적용한다. 실제 프론트엔드 구현 코드가 존재하면 `skills/verification-loop/SKILL.md`를 항상 함께 적용한다(외부 검수 D-037과 동일 원칙 — 실제 코드가 있으면 Gate만으로 끝내지 않는다). 최종적으로 `06.REPORT_TEMPLATE.md`에 결과를 남긴다.
+대상이 SRS/화면 목록 기반이면 `checklists/ui-ux-checklist.md`를 추가 적용한다. 실제 프론트엔드 구현 코드가 존재하면 `skills/verification-loop/SKILL.md`를 항상 함께 적용한다(외부 검수 D-037과 동일 원칙 — 실제 코드가 있으면 Gate만으로 끝내지 않는다). 설계가 끝나고 Vue 3 구현 화면의 다듬기·모션 작업으로 이어지면 `skills/vue-ui-polish/SKILL.md`(스택 한정)를 적용한다. 최종적으로 `06.REPORT_TEMPLATE.md`에 결과를 남긴다.
 
 ---
 

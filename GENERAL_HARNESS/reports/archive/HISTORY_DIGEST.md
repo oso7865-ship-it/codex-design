@@ -91,8 +91,12 @@
 | 2026-07-13 | `2026-07-13_harness-self-audit-round4-terminology-final-sweep_report.md` | Claude 자체 검수 4회차: "삭제 로그"/"PURGED_FILES"(구용어) 전수 grep으로 활성 문서 4곳 추가 발견·정리(3회차 spot-check의 불완전함을 보강) |
 | 2026-07-13 | `2026-07-13_harness-self-audit-round5-actual-delivery-step_report.md` | Claude 자체 검수 5회차: 실제 전달 누락 사고를 계기로 `06.REPORT_TEMPLATE.md §8-2`에 7-1번(실제 전달) 단계 신설(ADR-035) |
 | 2026-07-13 | `2026-07-13_harness-self-audit-round6-delivery-failure-handling-final_report.md` | Claude 자체 검수 6회차(최종): 7-1 자체가 실패/생략될 경우의 처리(8-1번) 추가. 자체 검수 루프 종료 |
-| 2026-07-29 | `2026-07-29_chapchap-design-foundation_report.md` | 챱챱 구독 서비스의 디자인 토큰, 고객 핵심 화면, 관리자 대시보드와 7개 라이브러리 기반을 구현한 최초 프로젝트 Report |
-| 2026-07-30 | `2026-07-30_chapchap-full-screen-implementation_report.md` | 페이지 카탈로그 49개 WF 전체를 고객·관리자 전용 UI로 구현하고 모바일·데스크톱·빌드 검수를 완료한 Report |
+| 2026-07-15 | `2026-07-15_harness-ui-ux-design-skill-addition_report.md` | `ui-ux-design` 스킬(13번째)·ui-ux-gate·ui-ux-checklist 신설, 스킬 본체와 Stack Profile 분리(ADR-036) |
+| 2026-07-21 | `2026-07-21_harness-git-first-agents-standardization_report.md` | Git-first 공식 반영 정책 확정, 루트 진입점 `AGENTS.md` 표준화(ADR-039) |
+| 2026-07-21 | `2026-07-21_harness-ui-ux-ai-pattern-guard_report.md` | `ui-ux-design`에 기계적·획일적 결과 방지 검토 추가(ADR-037), Stack Profile 구현 경계 보강(ADR-038) |
+| 2026-08-02 | `2026-08-02_harness-usage-audit-fixes-and-i2i-import_report.md` | 실사용 검수 15건 반영(Report Git 이력란·프로젝트 상수·구조 정리), `intent-to-implementation` 축소 반입(ADR-040), `browser-qa` 승격(ADR-042), `_LATEST` 2행 환류 구조(ADR-041). 활성 스킬 15개 |
+| 2026-08-03 | `2026-08-03_harness-vue-ui-polish-import_report.md` | `vue-ui-polish` 스택 한정 스킬 반입(ADR-043, 스택 한정 범주·MIT LICENSE 첫 반입). 활성 스킬 16개 |
+| 2026-08-03 | `2026-08-03_0045_harness-enforcement-layer_report.md` | 집행층 도입(ADR-044): CI harness-ci(검증 7종 강제), validate-no-secrets 신설, main 브랜치 보호, PR 템플릿, 2층 읽기 표면(03.CONTEXT_BUDGET §2-2-1) |
 
 ## 이후에도 참고할 만한 핵심 결정 (요약)
 

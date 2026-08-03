@@ -1,33 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ChevronLeft, Info, MapPin } from 'lucide-vue-next'
 import { useAppStore } from '../../../stores/useAppStore'
+import {
+  MINIMUM_DELIVERY_DATE_COUNT,
+  hasMinimumDeliveryDatesForEachWeek,
+} from '../../../utils/deliveryPolicy'
+import DeliveryDateCalendar from '../../../shared/components/forms/DeliveryDateCalendar.vue'
 
 const appStore = useAppStore()
 const emit = defineEmits(['navigate'])
 
-const availableDays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
-const draftDeliveryDays = ref([...appStore.currentSubscription.deliveryDays])
+const draftDeliveryDates = ref([...appStore.currentSubscription.deliveryDays])
 const draftDeliveryTime = ref(appStore.currentSubscription.deliveryTime)
 const draftAddressId = ref(appStore.currentSubscription.selectedAddressId)
 const validationMessage = ref('')
-
-function toggleDraftDay(day) {
-  const dayIndex = draftDeliveryDays.value.indexOf(day)
-
-  if (dayIndex >= 0) {
-    draftDeliveryDays.value.splice(dayIndex, 1)
-    return
-  }
-
-  draftDeliveryDays.value.push(day)
-}
+const canEditDelivery = computed(() => appStore.isRoundChangeAllowed(appStore.selectedRound))
 
 function saveDeliveryConditions() {
   validationMessage.value = ''
 
-  if (draftDeliveryDays.value.length === 0) {
-    validationMessage.value = '배송 요일을 최소 1개 선택해주세요.'
+  if (!hasMinimumDeliveryDatesForEachWeek(draftDeliveryDates.value)) {
+    validationMessage.value = '1주차와 2주차에 배송 희망일을 각각 3개 이상 선택해주세요.'
     return
   }
 
@@ -37,7 +31,7 @@ function saveDeliveryConditions() {
   }
 
   appStore.updateDeliveryConditions({
-    deliveryDays: draftDeliveryDays.value,
+    deliveryDays: draftDeliveryDates.value,
     deliveryTime: draftDeliveryTime.value,
     selectedAddressId: draftAddressId.value,
   })
@@ -58,20 +52,18 @@ function saveDeliveryConditions() {
       <p>변경 마감 전까지만 저장할 수 있으며 다음 회차에는 별도로 적용되지 않습니다.</p>
     </section>
 
-    <section v-if="appStore.selectedRound.canEditDelivery" class="delivery-edit-form">
+    <section v-if="canEditDelivery" class="delivery-edit-form">
       <fieldset>
-        <legend>배송 요일</legend>
-        <div class="choice-grid">
-          <button
-            v-for="day in availableDays"
-            :key="day"
-            type="button"
-            :class="{ 'is-selected': draftDeliveryDays.includes(day) }"
-            @click="toggleDraftDay(day)"
+        <legend>배송 희망일</legend>
+        <DeliveryDateCalendar v-model="draftDeliveryDates" />
+        <p class="form-help">
+          1주차와 2주차에 배송 희망일을 각각 최소 {{ MINIMUM_DELIVERY_DATE_COUNT }}개 선택해야
+          합니다.
+          <strong
+            >{{ draftDeliveryDates.length }} / 총 {{ MINIMUM_DELIVERY_DATE_COUNT * 2 }}개 이상
+            선택</strong
           >
-            {{ day }}
-          </button>
-        </div>
+        </p>
       </fieldset>
 
       <label>
@@ -113,10 +105,10 @@ function saveDeliveryConditions() {
       {{ validationMessage }}
     </p>
 
-    <div v-if="appStore.selectedRound.canEditDelivery" class="mobile-action-bar">
+    <div v-if="canEditDelivery" class="mobile-action-bar">
       <div>
-        <span>선택한 배송 요일</span>
-        <strong>{{ draftDeliveryDays.length }}개</strong>
+        <span>선택한 배송 희망일</span>
+        <strong>{{ draftDeliveryDates.length }} / {{ MINIMUM_DELIVERY_DATE_COUNT }}개 이상</strong>
       </div>
       <button class="button button-primary" type="button" @click="saveDeliveryConditions">
         변경 저장하기

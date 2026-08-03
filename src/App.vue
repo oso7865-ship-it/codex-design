@@ -11,6 +11,7 @@ import {
 } from 'lucide-vue-next'
 import CustomerHeader from './shared/components/layout/CustomerHeader.vue'
 import CustomerFooter from './shared/components/layout/CustomerFooter.vue'
+import CustomerQuickNavigation from './shared/components/navigation/CustomerQuickNavigation.vue'
 import TrialBottomSheet from './domain/subscription/components/TrialBottomSheet.vue'
 import { useAppStore } from './stores/useAppStore'
 
@@ -98,6 +99,7 @@ function navigate(view) {
 
     <template v-else>
       <CustomerHeader :current-view="activeNavigation" @navigate="navigate" />
+      <CustomerQuickNavigation @navigate="navigate" />
 
       <section class="customer-content">
         <!-- RouterView의 v-slot은 현재 주소와 연결된 페이지 컴포넌트를 꺼내는 문법입니다. -->

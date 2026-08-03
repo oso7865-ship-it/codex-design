@@ -6,7 +6,7 @@ const routineSteps = [
   {
     number: '01',
     title: '내 일정에 맞춰 설정',
-    description: '플랜과 배송 요일을 먼저 선택해요.',
+    description: '플랜과 배송 희망일을 먼저 선택해요.',
     icon: CalendarCheck2,
   },
   {

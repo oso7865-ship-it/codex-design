@@ -1,77 +1,60 @@
 <script setup>
 import { ref } from 'vue'
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-vue-next'
+import { ArrowLeft, ArrowRight } from 'lucide-vue-next'
 
-// defineEmits는 이 컴포넌트가 부모에게 화면 이동을 요청할 때 사용하는 Vue 문법입니다.
 const emit = defineEmits(['navigate'])
 
-// 캐러셀의 문구와 이동 위치를 한 배열에서 관리하면 새 슬라이드가 생겨도 화면 코드를 반복하지 않습니다.
 const slides = [
   {
-    id: 'service-introduction',
-    theme: 'routine',
-    eyebrow: '내 일정에 맞춘 식사 구독',
-    title: '잘 먹는 일상을,\n가볍게 이어가요.',
-    description: '필요한 날에 맞춰 메뉴를 고르고, 챱챱이 준비한 식사를 정기적으로 받아보세요.',
-    primaryAction: { label: '플랜 살펴보기', route: 'plans' },
-    secondaryAction: { label: '이번 주 메뉴 보기', route: 'menu' },
-    features: ['원하는 배송 요일', '2주 단위 구독', '메뉴 직접 구성'],
+    id: 'easy-meal',
+    eyebrow: '오늘 한 끼가 필요한 순간',
+    highlight: '맛있는 식사도',
+    title: '가볍게 챙겨요.',
+    tags: ['#원하는날배송', '#골라먹는메뉴', '#부담없는구독'],
+    action: { label: '이번 주 메뉴 보기', route: 'menu' },
+    imagePosition: 'right center',
   },
   {
-    id: 'trial-plan',
-    theme: 'trial',
-    eyebrow: '처음이라면 가볍게',
-    title: '챱챱을 먼저\n체험해 보세요.',
-    description: '정기 구독을 시작하기 전에 원하는 메뉴로 챱챱의 식사 구독을 경험해 보세요.',
-    primaryAction: { label: '체험 플랜 시작하기', route: 'wf-012' },
-    secondaryAction: { label: '전체 플랜 보기', route: 'plans' },
-    features: ['1주 체험', '메뉴 3개 선택', '자동 유료 전환 없음'],
+    id: 'meal-routine',
+    eyebrow: '내 생활에 맞춘 식사 루틴',
+    highlight: '바쁜 날에도',
+    title: '든든하게 챙겨요.',
+    tags: ['#2주단위구독', '#간편한식사', '#내일정대로'],
+    action: { label: '플랜 살펴보기', route: 'plans' },
+    imagePosition: '72% center',
   },
 ]
 
-// ref는 값이 바뀌면 연결된 화면도 다시 그려 주는 Vue의 반응형 상태입니다.
 const currentSlide = ref(0)
-
-const SWIPE_DISTANCE = 48
+const swipeDistance = 48
 let touchStartX = 0
 
-// 하단의 페이지 표시를 누르면 해당 번호의 슬라이드로 이동합니다.
 function showSlide(index) {
   currentSlide.value = index
 }
 
-// 마지막 슬라이드에서 다음을 누르면 첫 번째 슬라이드로 돌아갑니다.
 function showNextSlide() {
   currentSlide.value = (currentSlide.value + 1) % slides.length
 }
 
-// 첫 번째 슬라이드에서 이전을 누르면 마지막 슬라이드로 이동합니다.
 function showPreviousSlide() {
   currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length
 }
 
-// 손가락이 화면에 닿은 가로 위치를 저장해 스와이프 방향을 계산합니다.
 function handleTouchStart(event) {
   touchStartX = event.changedTouches[0].clientX
 }
 
-// 손가락 이동 거리가 기준보다 클 때만 슬라이드를 바꿔 작은 터치를 오작동으로 처리하지 않습니다.
 function handleTouchEnd(event) {
   const movedDistance = event.changedTouches[0].clientX - touchStartX
 
-  if (Math.abs(movedDistance) >= SWIPE_DISTANCE) {
-    if (movedDistance < 0) {
-      showNextSlide()
-    } else {
-      showPreviousSlide()
-    }
+  if (Math.abs(movedDistance) >= swipeDistance) {
+    movedDistance < 0 ? showNextSlide() : showPreviousSlide()
   }
 }
 </script>
 
 <template>
-  <!-- section은 하나의 주제를 가진 화면 영역을 구분하는 의미형 HTML 태그입니다. -->
-  <!-- .passive는 스와이프 중 화면 스크롤을 막지 않고 터치 위치만 읽게 하는 Vue 이벤트 옵션입니다. -->
   <section
     class="home-hero"
     aria-label="챱챱 주요 안내"
@@ -80,100 +63,75 @@ function handleTouchEnd(event) {
     @touchend.passive="handleTouchEnd"
   >
     <div class="home-hero__viewport">
-      <!--
-        v-for는 slides 배열의 항목 수만큼 슬라이드를 반복해서 만듭니다.
-        :style은 현재 번호에 따라 슬라이드 묶음을 가로로 이동시키는 Vue 속성 연결 문법입니다.
-      -->
       <div class="home-hero__track" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-        <div
+        <article
           v-for="(slide, index) in slides"
           :key="slide.id"
           class="home-hero__slide"
-          :class="`home-hero__slide--${slide.theme}`"
           :aria-hidden="currentSlide !== index"
+          :style="{ '--hero-image-position': slide.imagePosition }"
         >
+          <div class="home-hero__scrim" aria-hidden="true" />
           <div class="home-hero__content">
-            <p class="eyebrow">
-              <Sparkles :size="15" aria-hidden="true" />
-              {{ slide.eyebrow }}
-            </p>
-            <h1>{{ slide.title }}</h1>
-            <p class="home-hero__description">{{ slide.description }}</p>
-
-            <div class="home-hero__actions">
-              <!-- tabindex가 -1인 숨은 슬라이드의 버튼은 키보드 탭 순서에서 제외됩니다. -->
-              <button
-                class="button"
-                :class="slide.theme === 'trial' ? 'button-trial' : 'button-primary'"
-                type="button"
-                :tabindex="currentSlide === index ? 0 : -1"
-                @click="emit('navigate', slide.primaryAction.route)"
-              >
-                {{ slide.primaryAction.label }}
-                <ArrowRight :size="18" aria-hidden="true" />
-              </button>
-              <button
-                class="text-button"
-                type="button"
-                :tabindex="currentSlide === index ? 0 : -1"
-                @click="emit('navigate', slide.secondaryAction.route)"
-              >
-                {{ slide.secondaryAction.label }}
-              </button>
-            </div>
-
-            <!-- ul과 li는 서로 관련된 특징을 하나의 목록으로 전달하는 의미형 HTML 태그입니다. -->
-            <ul class="home-hero__features">
-              <li v-for="feature in slide.features" :key="feature">{{ feature }}</li>
+            <p class="home-hero__eyebrow">{{ slide.eyebrow }}</p>
+            <h1>
+              <span>{{ slide.highlight }}</span>
+              {{ slide.title }}
+            </h1>
+            <ul class="home-hero__tags" aria-label="주요 특징">
+              <li v-for="tag in slide.tags" :key="tag">{{ tag }}</li>
             </ul>
+            <button
+              class="home-hero__link"
+              type="button"
+              :tabindex="currentSlide === index ? 0 : -1"
+              @click="emit('navigate', slide.action.route)"
+            >
+              {{ slide.action.label }}
+              <ArrowRight :size="17" aria-hidden="true" />
+            </button>
           </div>
-        </div>
+        </article>
       </div>
     </div>
 
-    <!-- nav는 캐러셀 페이지를 이동하는 조작 버튼 묶음임을 알려 주는 의미형 HTML 태그입니다. -->
-    <!-- :class는 체험 슬라이드에서 컨트롤 색상을 Secondary로 바꾸는 Vue 속성 연결 문법입니다. -->
-    <nav
-      class="home-hero__navigation"
-      :class="{ 'home-hero__navigation--trial': slides[currentSlide].theme === 'trial' }"
-      aria-label="히어로 슬라이드 이동"
+    <button
+      class="home-hero__arrow home-hero__arrow--previous"
+      type="button"
+      aria-label="이전 슬라이드"
+      @click="showPreviousSlide"
     >
-      <button type="button" aria-label="이전 슬라이드" @click="showPreviousSlide">
-        <ArrowLeft :size="18" aria-hidden="true" />
-      </button>
+      <ArrowLeft :size="22" aria-hidden="true" />
+    </button>
+    <button
+      class="home-hero__arrow home-hero__arrow--next"
+      type="button"
+      aria-label="다음 슬라이드"
+      @click="showNextSlide"
+    >
+      <ArrowRight :size="22" aria-hidden="true" />
+    </button>
 
-      <div class="home-hero__indicators">
-        <button
-          v-for="(slide, index) in slides"
-          :key="`${slide.id}-indicator`"
-          type="button"
-          :class="{ 'is-active': currentSlide === index }"
-          :aria-label="`${index + 1}번 슬라이드 보기`"
-          :aria-current="currentSlide === index ? 'true' : undefined"
-          @click="showSlide(index)"
-        />
-      </div>
-
-      <span class="home-hero__count" aria-live="polite">
-        {{ String(currentSlide + 1).padStart(2, '0') }} /
-        {{ String(slides.length).padStart(2, '0') }}
-      </span>
-
-      <button type="button" aria-label="다음 슬라이드" @click="showNextSlide">
-        <ArrowRight :size="18" aria-hidden="true" />
-      </button>
-    </nav>
+    <div class="home-hero__indicators" aria-label="히어로 슬라이드 선택">
+      <button
+        v-for="(slide, index) in slides"
+        :key="slide.id"
+        type="button"
+        :class="{ 'is-active': currentSlide === index }"
+        :aria-label="`${index + 1}번 슬라이드 보기`"
+        :aria-current="currentSlide === index ? 'true' : undefined"
+        @click="showSlide(index)"
+      />
+    </div>
   </section>
 </template>
 
 <style scoped>
-/* scoped는 이 파일의 스타일이 다른 페이지의 같은 태그나 클래스에 섞이지 않게 제한하는 Vue 기능입니다. */
-/* 히어로는 사진 상자 없이 문구와 행동을 전체 폭으로 보여 주는 캐러셀입니다. */
 .home-hero {
   position: relative;
   overflow: hidden;
-  border-radius: 32px;
-  background: var(--color-surface);
+  min-height: 490px;
+  background: #323436;
 }
 
 .home-hero__viewport {
@@ -182,209 +140,217 @@ function handleTouchEnd(event) {
 
 .home-hero__track {
   display: flex;
-  transition: transform 0.45s ease;
+  transition: transform 0.52s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .home-hero__slide {
+  position: relative;
   flex: 0 0 100%;
-  min-height: 500px;
+  min-height: 490px;
   display: flex;
   align-items: center;
-  padding: 72px 92px 106px;
+  padding: 72px clamp(54px, 7vw, 106px) 86px;
+  isolation: isolate;
+  background-image: url('/images/home-hero-jeon.png');
+  background-position: var(--hero-image-position);
+  background-size: cover;
 }
 
-.home-hero__slide--routine {
-  background: linear-gradient(135deg, #f2f4e7 0%, #fffdf9 64%, #fff5e9 100%);
-}
-
-.home-hero__slide--trial {
-  background: linear-gradient(135deg, #fff3e4 0%, #fffaf4 62%, #f3f5e9 100%);
+.home-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(18, 20, 21, 0.78) 0%, rgba(18, 20, 21, 0.66) 33%, rgba(18, 20, 21, 0.1) 67%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.18), transparent 48%);
 }
 
 .home-hero__content {
-  width: min(100%, 780px);
+  max-width: 500px;
+  color: #fff;
+}
+
+.home-hero__eyebrow {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .home-hero h1 {
-  max-width: 760px;
-  margin-top: 18px;
-  white-space: pre-line;
-  font-size: clamp(42px, 5.4vw, 72px);
-  line-height: 1.08;
-  letter-spacing: -0.045em;
-}
-
-.home-hero__description {
-  max-width: 600px;
-  margin-top: 22px;
-  font-size: 17px;
-  line-height: 1.75;
-}
-
-.home-hero__actions {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 32px;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+  color: #fff;
+  font-size: clamp(38px, 4.7vw, 66px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.07em;
 }
 
-.home-hero__features {
+.home-hero h1 span {
+  width: fit-content;
+  padding: 2px 11px 5px;
+  background: #f07122;
+  color: #fff;
+}
+
+.home-hero__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 36px;
+  gap: 8px;
+  margin: 30px 0 0;
+  padding: 0;
   list-style: none;
 }
 
-.home-hero__features li {
-  padding: 9px 13px;
-  border: 1px solid rgba(125, 142, 73, 0.25);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.58);
-  color: var(--color-text-muted);
-  font-size: 13px;
+.home-hero__tags li {
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.17);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(7px);
+}
+
+.home-hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 25px;
+  padding: 0 0 4px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
   font-weight: 700;
 }
 
-.home-hero__navigation {
-  /* 아래 변수는 슬라이드 성격에 따라 컨트롤 색상만 교체하기 위한 CSS 사용자 정의 속성입니다. */
-  --hero-control-accent: var(--color-primary);
-  --hero-control-pressed: var(--color-primary-pressed);
-  --hero-control-soft: var(--color-primary-soft);
+.home-hero__link:hover {
+  border-bottom-color: #f07122;
+  color: #ffd3b8;
+}
+
+.home-hero__arrow {
   position: absolute;
-  right: 38px;
-  bottom: 32px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 10px;
-  border: 1px solid var(--hero-control-accent);
-  border-radius: 999px;
-  background: var(--hero-control-soft);
-  box-shadow: 0 12px 30px rgba(40, 45, 31, 0.12);
-  backdrop-filter: blur(12px);
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease;
-}
-
-.home-hero__navigation--trial {
-  --hero-control-accent: var(--color-secondary);
-  --hero-control-pressed: #a35d13;
-  --hero-control-soft: var(--color-secondary-soft);
-}
-
-.home-hero__navigation > button {
-  width: 40px;
-  height: 40px;
+  top: 50%;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.34);
   border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--hero-control-pressed);
-  box-shadow: 0 4px 12px rgba(40, 45, 31, 0.1);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+  background: rgba(29, 31, 31, 0.24);
+  color: #fff;
+  opacity: 0.9;
+  transform: translateY(-50%);
+  transition: background 0.2s ease, opacity 0.2s ease;
 }
 
-.home-hero__navigation > button:hover {
-  background: var(--hero-control-accent);
-  color: var(--color-text);
-  transform: scale(1.06);
+.home-hero__arrow:hover {
+  background: rgba(240, 113, 34, 0.9);
+  opacity: 1;
 }
 
-.home-hero__navigation button:focus-visible {
-  outline: 2px solid var(--hero-control-accent);
-  outline-offset: 2px;
+.home-hero__arrow--previous {
+  left: 18px;
+}
+
+.home-hero__arrow--next {
+  right: 18px;
 }
 
 .home-hero__indicators {
+  position: absolute;
+  right: 50%;
+  bottom: 28px;
+  z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 6px;
+  gap: 8px;
+  transform: translateX(50%);
 }
 
 .home-hero__indicators button {
-  width: 8px;
-  height: 8px;
+  width: 34px;
+  height: 3px;
+  padding: 0;
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--hero-control-accent);
-  transition:
-    width 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .home-hero__indicators button.is-active {
-  width: 26px;
-  background: var(--hero-control-pressed);
-  box-shadow: none;
+  background: #fff;
+  transform: scaleX(1.15);
 }
 
-.home-hero__count {
-  min-width: 50px;
-  color: var(--hero-control-pressed);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-align: center;
+.home-hero__arrow:focus-visible,
+.home-hero__link:focus-visible,
+.home-hero__indicators button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
 }
 
 @media (max-width: 760px) {
   .home-hero {
-    border-radius: 23px;
+    min-height: 520px;
   }
 
   .home-hero__slide {
-    min-height: 530px;
+    min-height: 520px;
     align-items: flex-start;
-    padding: 42px 25px 104px;
+    padding: 58px 32px 96px;
+    background-position: 82% center;
   }
 
-  .home-hero h1 {
-    font-size: clamp(30px, 9.4vw, 46px);
-    line-height: 1.12;
+  .home-hero__scrim {
+    background:
+      linear-gradient(90deg, rgba(18, 20, 21, 0.8) 0%, rgba(18, 20, 21, 0.5) 70%, rgba(18, 20, 21, 0.12) 100%),
+      linear-gradient(0deg, rgba(0, 0, 0, 0.34), transparent 58%);
   }
 
-  .home-hero__description {
-    margin-top: 18px;
+  .home-hero__eyebrow {
     font-size: 14px;
   }
 
-  .home-hero__actions {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 27px;
+  .home-hero h1 {
+    font-size: clamp(36px, 10vw, 50px);
   }
 
-  .home-hero__actions .button,
-  .home-hero__actions .text-button {
-    width: 100%;
-    min-height: 48px;
-    justify-content: center;
-  }
-
-  .home-hero__features {
-    gap: 7px;
+  .home-hero__tags {
+    gap: 6px;
     margin-top: 24px;
   }
 
-  .home-hero__features li {
-    padding: 7px 10px;
-    font-size: 12px;
+  .home-hero__tags li {
+    padding: 6px 8px;
+    font-size: 11px;
   }
 
-  .home-hero__navigation {
-    right: 18px;
-    bottom: 18px;
-    left: 18px;
-    justify-content: space-between;
+  .home-hero__arrow {
+    top: auto;
+    bottom: 20px;
+    width: 38px;
+    height: 38px;
+    transform: none;
+  }
+
+  .home-hero__arrow--previous {
+    left: 20px;
+  }
+
+  .home-hero__arrow--next {
+    right: 20px;
+  }
+
+  .home-hero__indicators {
+    bottom: 37px;
   }
 }
 </style>
