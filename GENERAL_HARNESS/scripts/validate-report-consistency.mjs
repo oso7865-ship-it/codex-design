@@ -35,9 +35,12 @@ if (!fs.existsSync(latestPath)) {
   process.exit(1);
 }
 const latestText = fs.readFileSync(latestPath, 'utf8');
-const pointerMatch = latestText.match(/최신 판단 기준\s*\|\s*`([^`]+)`/);
+// 2행 구조(ADR-041): "하네스 유지보수 최신" 행이 이 저장소의 검증 대상 포인터다.
+// 구 단일 포인터 형식("최신 판단 기준 | `경로`")도 하위 호환으로 인식한다.
+const pointerMatch = latestText.match(/하네스 유지보수 최신\s*\|\s*`([^`]+)`/) ||
+  latestText.match(/최신 판단 기준\s*\|\s*`([^`]+)`/);
 if (!pointerMatch) {
-  console.error('FAIL cannot locate "최신 판단 기준" pointer row in reports/_LATEST.md.');
+  console.error('FAIL cannot locate "하네스 유지보수 최신" (or legacy "최신 판단 기준") pointer row in reports/_LATEST.md.');
   process.exit(1);
 }
 const latestReportRel = pointerMatch[1];

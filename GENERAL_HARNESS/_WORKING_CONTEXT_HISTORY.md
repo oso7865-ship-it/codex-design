@@ -238,27 +238,3 @@
 | P2 | 실제 프로젝트에 적용 후 피드백 반영 | 이 시점 기준 대기 — `05.WORKING_CONTEXT.md`를 신규 프로젝트 템플릿으로 전환한 것이 이 작업의 첫걸음 |
 | P2 | 체크리스트 사용 결과 누적 | 이 시점 기준 대기 |
 | P3 | C등급 후보 스킬 도입 검토 | 이 시점 기준 대기 |
-
-## 2026-07-29 챱챱 프로젝트 상태 요약
-
-- 최근 완료: 디자인 토큰, 고객 핵심 화면, 관리자 대시보드, 합의한 7개 라이브러리 설치, Vue Router 기반 Hash 경로 연결, production build 확인
-- 남은 WARN/FAIL: API 명세·테스트 없음으로 예시 데이터 상태. FAIL 없음
-- 다음 작업에 영향을 주는 결정: 플랜 가격은 `가격 미정`으로만 표시하며 최종 계산은 서버가 담당한다. PrimeVue는 관리자 전용이다.
-- 더 이상 읽지 않아도 되는 오래된 맥락: 하네스 자체 유지보수 Report는 이 프로젝트의 현재 작업 판단 기준이 아니다.
-- 다시 확인해야 하는 증거 Report: `reports/archive/2026-07-29_chapchap-design-foundation_report.md`
-
-## 2026-07-30 챱챱 전체 화면 구현 상태 요약
-
-- 최근 완료: 페이지 카탈로그 49개 WF 전체를 고객·관리자 전용 UI 프로토타입으로 구현, 모바일·데스크톱 브라우저 검수, production build 확인
-- 남은 WARN/FAIL: 실제 인증·권한·결제·환불 API 명세와 자동화 테스트가 없어 WARN. FAIL 없음
-- 다음 작업에 영향을 주는 결정: 실제 민감 기능은 화면에서 실행하지 않으며 서버 검증 API가 준비된 뒤 연결한다. PrimeVue는 관리자 전용이다.
-- 더 이상 읽지 않아도 되는 오래된 맥락: 최초 디자인 기반 Report의 다음 작업 목록은 최신 Report로 대체되었다.
-- 다시 확인해야 하는 증거 Report: `reports/archive/2026-07-30_chapchap-full-screen-implementation_report.md`
-
-## 2026-07-30 챱챱 서비스 폴더 개편 상태 요약
-
-- 최근 완료: 49개 WF UI를 유지한 채 7개 서비스별 `pages` 구조와 shared·legacy 경계로 개편, production build 확인
-- 남은 WARN/FAIL: 통합 Pinia store, 실제 API 명세, 자동화 테스트가 없어 WARN. FAIL 없음
-- 다음 작업에 영향을 주는 결정: 서비스는 다른 서비스의 내부 컴포넌트를 직접 import하지 않고 공용 UI만 shared에서 사용한다.
-- 더 이상 읽지 않아도 되는 오래된 맥락: 평면 `src/components` 구조를 기준으로 한 파일 위치 설명은 최신 Report로 대체되었다.
-- 다시 확인해야 하는 증거 Report: `reports/2026-07-30_chapchap-service-folder-restructure_report.md`

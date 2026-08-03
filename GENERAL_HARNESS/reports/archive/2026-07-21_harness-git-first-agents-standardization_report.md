@@ -1,5 +1,9 @@
 # 작업 리포트: Git-first 운영 및 AGENTS 표준화
 
+> Superseded note:  
+> 이 보고서의 다음 작업 판단은 `reports/_LATEST.md`가 가리키는 최신 Report로 대체되었다.  
+> 과거 의사결정 근거로는 유효하지만, 현재 Next Work 판단은 최신 Report와 `05.WORKING_CONTEXT.md`를 우선한다.
+
 > 작성일: 2026-07-21  
 > 작업 범위: L  
 > 적용 스킬: `git-workflow`, `report-consistency`, `quality-gate`  

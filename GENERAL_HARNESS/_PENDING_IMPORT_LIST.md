@@ -29,7 +29,7 @@
 | Command Registry 전체 | `docs/COMMAND-REGISTRY.json` | 명령 카탈로그 유지 비용이 큼 | 명령 자동화가 10개 이상 필요할 때 |
 | MCP Connector 정책 전체 | `docs/MCP-CONNECTOR-POLICY.md` | 외부 도구 연결 보안 검토가 필요함 | 승인 도구 목록과 사용 정책이 생길 때 |
 | hooks 자동 차단 전체 | `scripts/hooks/quality-gate.js` | 오작동 시 작업이 막힐 수 있음 | 수동 스크립트가 안정화된 뒤 |
-| Browser QA 전체 | `skills/browser-qa/SKILL.md` | 브라우저 자동화 환경이 필요함 | UI 회귀 테스트가 반복될 때 |
+| Browser QA 전체 | `skills/browser-qa/SKILL.md` | **2026-08-02 정식 스킬로 승격 완료(ADR-042)** — 실사용 Report 10건 중 5회 반복 + 자동화 도구 사용을 사용자가 확인해 도입 조건이 충족됨 | 승격됨. 현재 스킬은 `skills/browser-qa/SKILL.md` 참조 |
 | E2E Testing 전체 | `skills/e2e-testing/SKILL.md` | 테스트 계정/데이터/환경 관리 필요 | 핵심 사용자 플로우가 안정화된 뒤 |
 | 실행자 분기 구조(`00.EXECUTOR_BOOT.md` 등) | `harness_import_candidates_20260704/executor_routing_documents_draft.md` | 루트 `AGENTS.md`는 최소 진입 지도로 채택했고 `CLAUDE.md`는 보조 안내로 유지한다. 별도 부트 문서 다수·제품별 분기 구조는 여전히 무겁다. | 여러 실행자 역할이 3~5개 이상으로 분리되고, 단일 진입 지도만으로 Handoff가 반복 실패할 때 |
 | Understand-Anything 전체(대시보드, 멀티에이전트 파이프라인) | `Understand-Anything-main.zip`(원본 저장소 실사 완료) | React 대시보드+멀티에이전트 파이프라인이 있는 완제품 모노레포. `docs/superpowers/specs`·`plans`의 계획 패턴만 `skills/planning/SKILL.md`로 재작성 반입함(`10.ADR.md` ADR-017) | 실제 프로젝트에 하네스를 부착하고 코드베이스가 커져 시각적 온보딩이 필요해졌을 때 |
@@ -46,7 +46,7 @@
 |---|---|
 | 특정 ORM 전용 스킬 | 일반 하네스에 바로 넣으면 특정 기술 스택으로 오해될 수 있음 |
 | `skills/backend-patterns/SKILL.md` 원본 전체 | 특정 백엔드 스택 기준을 전역 규칙으로 오해할 수 있음 |
-| `skills/frontend-patterns/SKILL.md` 원본 전체 | 특정 프론트엔드 스택 기준을 전역 규칙으로 오해할 수 있음. **`ui-ux-design` 스킬(정식 반입됨)과의 차이**: 그 스킬 본체는 기술 중립적 실행 절차만 갖고, PrimeVue/Tailwind 같은 특정 스택 고정 정책은 `skills/ui-ux-design/STACK_PROFILE_PRIMEVUE_TAILWIND.md`라는 별도 파일로 분리해 프로젝트가 선택적으로 활성화하는 구조라 이 제외 사유에 해당하지 않는다 |
+| `skills/frontend-patterns/SKILL.md` 원본 전체 | 특정 프론트엔드 스택 기준을 전역 규칙으로 오해할 수 있음. **`ui-ux-design` 스킬(정식 반입됨)과의 차이**: 그 스킬 본체는 기술 중립적 실행 절차만 갖고, PrimeVue/Tailwind 같은 특정 스택 고정 정책은 `skills/ui-ux-design/STACK_PROFILE_PRIMEVUE_TAILWIND.md`라는 별도 파일로 분리해 프로젝트가 선택적으로 활성화하는 구조라 이 제외 사유에 해당하지 않는다. **`vue-ui-polish`(정식 반입됨)와의 차이**: 스택 한정 스킬 범주(`01.SKILL_TEMPLATE.md §2-2`, ADR-043)로, Harness Control Rule에 "Vue 3 외 프로젝트에서는 존재 무시"를 선언해 전역 오해 경로를 스킬이 스스로 차단하므로 이 제외 사유에 해당하지 않는다 |
 | 설치 스크립트 전체 | 공급망/환경 리스크 검토 전에는 반입하지 않음 |
 | MCP 설정 파일 | 외부 도구 연결 정책이 먼저 필요함 |
 
@@ -87,6 +87,8 @@
 | 안정 패키지명 검사 | `scripts/validate-package.mjs` | 기초 구현 완료 |
 | 런타임 Quick Ref | `00.QUICK_REF.md`, `03.CONTEXT_BUDGET.md` | 토큰 절감용 런타임 요약 레이어 반영 완료 |
 | ZIP 내부 구조 검사(단일 루트/경로탈출/중복/필수파일/parity/파일별 SHA-256) | `scripts/validate-package.mjs` | 순수 Node ZIP 리더로 재작성해 `unzip` 외부 의존 없이 완전 구현(ADR-028, 근거 Report는 `reports/archive/` 참고) |
+| 시크릿·민감 파일 추적 검사 | `scripts/validate-no-secrets.mjs`, CI(`harness-ci`) | 실제 유출 사고 2건을 근거로 구현 완료, CI 강제 실행(ADR-044) |
+| Report 헤더 성적표 집계(스킬 발동률·미등록 스킬명·Git 기록·반복 미해결) | `scripts/harness-stats.mjs` | 챱챱 수동 전수 분석(2026-08-02)을 자동화. 통계 전용, CI 차단 미사용. 사용법은 `reports/README.md §4` |
 
 ### 6-2. 부분 반영
 
