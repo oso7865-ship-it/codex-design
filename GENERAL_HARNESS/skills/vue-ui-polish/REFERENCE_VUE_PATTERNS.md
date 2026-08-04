@@ -2,6 +2,28 @@
 
 > `skills/vue-ui-polish/SKILL.md`의 보조 참조 문서다. 단독 스킬이 아니며, 상위 스킬의 Harness Control Rule(Vue 3 스택 한정 포함)을 그대로 따른다.
 
+## 0. 프로젝트 관례 보존
+
+- Composition API와 Options API가 섞여 있다면 대상 폴더의 기존 방식을 따른다.
+- Router, Pinia, TanStack Query, 폼·검증 라이브러리의 현재 책임을 디자인 작업 중 옮기지 않는다.
+- 공통 컴포넌트가 있으면 props·slots·events 계약을 먼저 읽고 재사용한다.
+- 서버 상태, 전역 제품 상태, 컴포넌트 로컬 상태를 구분한다.
+- 스타일 방식은 프로젝트의 Tailwind, scoped CSS, CSS Modules 중 기존 방식을 유지한다.
+
+### PrimeVue
+
+- 현재 프로젝트가 styled mode인지 unstyled mode인지 확인한다.
+- 테마 preset, semantic token, PassThrough 설정이 있으면 페이지 내부 override보다 우선한다.
+- 접근성·포커스·키보드 동작을 이미 제공하는 primitive를 CSS 때문에 다시 구현하지 않는다.
+- PrimeVue 내부 클래스에 깨지기 쉬운 전역 선택자를 덧대기보다 공식 토큰·PassThrough·wrapper API를 사용한다.
+
+### Tailwind
+
+- 설정된 theme token과 프로젝트 utility 조합을 우선한다.
+- 같은 의미의 긴 class 조합이 반복되면 기존 Base 컴포넌트나 프로젝트가 사용하는 추출 방식을 검토한다.
+- 임의 값은 한 번의 예외에만 사용하고, 반복되면 의미 토큰으로 승격한다.
+- Tailwind와 scoped CSS 중 어느 쪽이 더 예쁜지가 아니라 현재 컴포넌트의 책임과 프로젝트 규칙으로 선택한다.
+
 ## 1. `Transition`
 
 단일 요소나 컴포넌트의 등장·퇴장에는 Vue의 `<Transition>`을 우선 고려하라.
@@ -91,4 +113,6 @@ React 전용 라이브러리를 Vue 프로젝트에 추천하지 마라. 새 의
 - reduced-motion 환경에서 의미 전달이 유지되는지 확인하라.
 - 브라우저 콘솔 오류와 Vue 경고가 없는지 확인하라.
 - 네트워크가 느릴 때 loading, success, error 전환이 겹치지 않는지 확인하라.
-
+- hydration, console, accessibility 경고를 디자인 문제와 별개로 넘기지 마라.
+- PrimeVue overlay와 Teleport가 z-index, focus, scroll lock을 올바르게 처리하는지 확인하라.
+- Tailwind production build에서 동적 class 이름이 누락되지 않는지 확인하라.

@@ -34,6 +34,10 @@ function resolveRoot() {
 }
 
 const root = resolveRoot();
+// GENERAL_HARNESS is attached below the project root. Reports may deliberately
+// refer to project files such as `src/domain/README.md`, so resolve those from
+// the parent project as well as from the harness package itself.
+const projectRoot = path.dirname(root);
 const EXCLUDED_FILES = new Set(['_PENDING_IMPORT_LIST.md', '10.ADR.md', '_SOURCE_MAPPING.md']);
 const NUMBERED_DOC = /^(00|01|02|03|04|05|06|07|08|09|10)\.[A-Z_]+\.md$/;
 const KNOWN_ROOT_FILES = new Set(['_SOURCE_MAPPING.md', '_PENDING_IMPORT_LIST.md']);
@@ -71,6 +75,8 @@ function shouldCheck(ref) {
 function existsWithFallback(root, ref) {
   const direct = path.join(root, ref);
   if (fs.existsSync(direct)) return true;
+  const projectFile = path.join(projectRoot, ref);
+  if (fs.existsSync(projectFile)) return true;
   if (!ref.includes('/')) {
     if (fs.existsSync(path.join(root, 'reports', ref))) return true;
   }

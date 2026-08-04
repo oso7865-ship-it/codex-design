@@ -2,6 +2,8 @@
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
+> 언어 안내: §1~§4는 외부 원문(영어)을 그대로 반입한 것이라 영어로 유지하고, 하단 "Project Harness" 섹션은 이 저장소의 운영 언어(한국어)로 작성한다. 의도된 혼용이다.
+
 Repository entry policy: `AGENTS.md` is the standard agent instruction file. This `CLAUDE.md` is Claude-specific supplemental guidance; neither entry document is included in automated harness validation, so a change to either requires manual review against `GENERAL_HARNESS/00.HARNESS_RULES.md`.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.

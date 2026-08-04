@@ -23,7 +23,7 @@
 | `codebase-memory-mcp-main.zip` | 사용자가 대화에 직접 첨부(GitHub 저장소 원본) | 2026-07-09 | 미보존(93MB) | 재검증 불가 |
 | `intent-to-implementation.zip`(스킬 패키지, 영어 원문 + YAML frontmatter + 벤더 배포 파일) | 사용자가 로컬 작업 폴더에 직접 제공 | 2026-08-02 | 미보존(사용자 결정으로 저장소에서 제외, 로컬에만 존재) | 재검증 불가 — 필요 시 사용자가 재제공. 원저작 여부(직접 작성 vs 외부 파생)도 미확인 |
 | `HARNESS_문제점_종합정리_2026-08-02.md`(실사용 Report 10건 분석 + 반입 검수) | 사용자가 로컬 작업 폴더에 직접 제공 | 2026-08-02 | 미보존(사용자 결정으로 저장소에서 제외, 로컬에만 존재) | 재검증 불가 — 필요 시 사용자가 재제공. 근거가 된 챱챱 프로젝트 Report 10건 원본도 이 저장소 밖에 있음 |
-| `vue-ui-polish.zip`(스킬 패키지, 한국어 본문 + YAML frontmatter + 벤더 배포 파일 + MIT LICENSE) | 사용자가 로컬 작업 폴더에 직접 제공 | 2026-08-03 | 미보존(사용자 결정으로 저장소에서 제외, 로컬에만 존재). 단 `LICENSE`는 MIT 고지 보존 의무에 따라 `skills/vue-ui-polish/LICENSE`로 반입 | 재검증 불가 — 원저작은 Emil Kowalski의 `Skills for Design Engineers`(MIT)의 Vue 재구성 파생본 |
+| `vue-ui-polish.zip`(스킬 패키지, 한국어 본문 + YAML frontmatter + 벤더 배포 파일 + MIT LICENSE) | 사용자가 로컬 작업 폴더에 직접 제공 | 2026-08-03(최초), 2026-08-04(개정본 2회 — 참조 11종·감사 스크립트 포함 확장) | 미보존(사용자 결정으로 저장소에서 제외, 로컬에만 존재). 단 `LICENSE`는 MIT 고지 보존 의무에 따라 `skills/vue-ui-polish/LICENSE`로 반입(개정본 기준 저작권자 3인) | 재검증 불가 — 원저작은 Emil Kowalski `Skills for Design Engineers` + Hallmark 구조 다양화·안티패턴 감사 + Taste Skill(Leonxlnx) 브리프 해석·시각 강도 개념의 Vue 재구성 파생본 |
 
 모든 외부 자료는 URL이나 해시를 별도로 기록하지 않는다 — 대화 중 사용자가 직접 첨부한 파일이라 출처가 "이 대화 자체"이며, 별도의 외부 URL·버전 관리가 없는 임시 업로드이기 때문이다. 재현이 필요하면 사용자에게 재첨부를 요청한다.
 
@@ -324,3 +324,24 @@
 |---|---|
 | `agents/openai.yaml`, `assets/icon.svg` | 특정 벤더 배포 규격 — ADR-040과 동일 사유(반입 검수 P-18) |
 | YAML frontmatter | 하네스 스킬 템플릿과 불일치 — ADR-040과 동일 사유 |
+
+---
+
+## vue-ui-polish.zip 개정본 반영 (2026-08-04)
+
+최초 반입(2026-08-03, ADR-043) 직후 사용자가 대폭 확장된 개정본을 제공해 교체 반입했다. 구조 결정은 `10.ADR.md` ADR-045(하네스 동결의 마지막 예외)다.
+
+| 반입 대상 | 참고한 원본 | 반영 방식 |
+|---|---|---|
+| `skills/vue-ui-polish/SKILL.md` | 개정본 `SKILL.md` | 하네스 7섹션으로 재구성. 실행 모드 5종·판단 우선순위·필수 규칙을 Procedure/Quality Gate/Anti-Patterns로 배치. frontmatter 제거, 스택 한정 HCR과 `ui-ux-design` 소유권 경계 문장 추가 |
+| `REFERENCE_MODES.md` 외 참조 10종 | `references/*.md` 11종 | 평면 `REFERENCE_*.md`로 개명, 종속 명시 추가, 내부 마크다운 링크를 코드 span으로 변환. 내용은 원문 유지(이미 한국어) |
+| `skills/vue-ui-polish/scripts/ui-pattern-audit.mjs` | `scripts/ui-pattern-audit.mjs` | 원문 그대로 반입(순수 Node, 의존성 0). 스킬 보조 스크립트 첫 사례 — 규칙은 `01.SKILL_TEMPLATE.md §2-1` |
+| `skills/vue-ui-polish/LICENSE` | 개정본 `LICENSE` | 저작권자 3인(Emil Kowalski, Hallmark 계열, Leonxlnx) 버전으로 교체 |
+
+### 반입하지 않은 이유
+
+| 항목 | 반입하지 않은 이유 |
+|---|---|
+| `agents/openai.yaml`, `assets/icon.svg` | 특정 벤더 배포 규격 — ADR-040/043과 동일 사유 |
+| YAML frontmatter | 하네스 스킬 템플릿과 불일치 — 동일 사유 |
+| 세 다이얼 수치의 전역 승격 | `REFERENCE_TASTE_STRATEGY.md` 내부의 제한 장치로만 유지. 스택 한정 스킬 밖으로 꺼내면 기술 중립 원칙과 충돌 |

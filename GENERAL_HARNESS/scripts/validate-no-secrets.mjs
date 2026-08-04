@@ -47,7 +47,9 @@ let failed = false;
 const forbiddenFilePatterns = [
   { re: /(^|\/)\.claude\//, why: '로컬 에이전트 설정은 공유하지 않는다(.gitignore 정책)' },
   { re: /\.zip$/i, why: '외부 반입 원본 zip은 저장소에 올리지 않는다(.gitignore 정책)' },
-  { re: /(^|\/)\.env(\.|$)/, why: '환경변수 파일은 비밀값을 담을 수 있다' },
+  // `.env.example` is a safe, empty configuration template. Its contents are
+  // still scanned below; only its file name is permitted in version control.
+  { re: /(^|\/)\.env(?!\.example$)(\.|$)/, why: '환경변수 파일은 비밀값을 담을 수 있다' },
   { re: /\.(pem|p12|pfx|jks|keystore)$/i, why: '키/인증서 파일' },
   { re: /(^|\/)id_(rsa|ed25519|ecdsa)(\.|$)/, why: 'SSH 개인키' },
 ];
