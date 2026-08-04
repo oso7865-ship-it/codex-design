@@ -18,7 +18,6 @@ const planNames = {
 <template>
   <div class="page">
     <section class="page-intro">
-      <p class="section-kicker">MY SUBSCRIPTION</p>
       <h1>내 식사 구독을<br />한눈에 관리하세요.</h1>
       <p>
         이번 회차의 변경 마감은
@@ -99,7 +98,6 @@ const planNames = {
       <section class="section-block compact-section">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">NEXT DELIVERY</p>
             <h2>이번 회차 구성</h2>
           </div>
           <button
@@ -132,7 +130,6 @@ const planNames = {
       <section class="section-block compact-section">
         <div class="section-heading">
           <div>
-            <p class="section-kicker">DELIVERY CONDITIONS</p>
             <h2>배송 조건</h2>
           </div>
           <button
@@ -169,7 +166,6 @@ const planNames = {
 
       <section class="subscription-settings">
         <div>
-          <p class="section-kicker">SUBSCRIPTION SETTINGS</p>
           <h2>기타 구독 관리</h2>
           <p>구독 종료를 포함한 기타 설정을 관리합니다.</p>
         </div>

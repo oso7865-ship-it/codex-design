@@ -31,6 +31,9 @@ const navigationItems = [
 // 현재 선택된 화면이 관리자 화면인지 계산합니다.
 // 현재 URL의 route 정보가 바뀔 때마다 이 값도 자동으로 다시 계산됩니다.
 const isAdminPage = computed(() => route.name === 'admin' || route.meta.area === 'admin')
+// 로그인·회원가입과 구독 신청은 한 가지 과업에 집중해야 하는 화면입니다.
+// 라우트의 layout 값으로 공통 헤더·푸터·전역 탐색을 숨겨 집중형 레이아웃을 적용합니다.
+const isMinimalPage = computed(() => route.meta.layout === 'minimal')
 const activeNavigation = computed(() => {
   const routeName = String(route.name || '')
 
@@ -78,7 +81,7 @@ const activeNavigation = computed(() => {
 // onMounted는 App 화면이 처음 브라우저에 그려진 직후 한 번 실행하는 Vue 기능입니다.
 // 체험 종료 응답이면서 고객 화면일 때 전환 안내를 최초 1회 자동으로 엽니다.
 onMounted(() => {
-  if (!isAdminPage.value) {
+  if (!isAdminPage.value && !isMinimalPage.value) {
     appStore.openTrialSheet()
   }
 })
@@ -90,7 +93,13 @@ function navigate(view) {
 </script>
 
 <template>
-  <main class="app-shell" :class="{ 'admin-mode': isAdminPage }">
+  <main
+    class="app-shell"
+    :class="{
+      'admin-mode': isAdminPage,
+      'customer-minimal-mode': isMinimalPage,
+    }"
+  >
     <template v-if="isAdminPage">
       <RouterView v-slot="{ Component }">
         <component :is="Component" @navigate="navigate" />
@@ -98,10 +107,10 @@ function navigate(view) {
     </template>
 
     <template v-else>
-      <CustomerHeader :current-view="activeNavigation" @navigate="navigate" />
-      <CustomerQuickNavigation @navigate="navigate" />
+      <CustomerHeader v-if="!isMinimalPage" :current-view="activeNavigation" @navigate="navigate" />
+      <CustomerQuickNavigation v-if="!isMinimalPage" @navigate="navigate" />
 
-      <section class="customer-content">
+      <section class="customer-content" :class="{ 'customer-content--minimal': isMinimalPage }">
         <!-- RouterView의 v-slot은 현재 주소와 연결된 페이지 컴포넌트를 꺼내는 문법입니다. -->
         <!-- 여기서는 모든 고객 페이지에 같은 화면 전환 함수와 체험 Sheet 열기 기능을 전달합니다. -->
         <RouterView v-slot="{ Component }">
@@ -112,9 +121,9 @@ function navigate(view) {
           />
         </RouterView>
       </section>
-      <CustomerFooter @navigate="navigate" />
+      <CustomerFooter v-if="!isMinimalPage" @navigate="navigate" />
 
-      <nav class="bottom-navigation" aria-label="주요 메뉴" v-auto-animate>
+      <nav v-if="!isMinimalPage" class="bottom-navigation" aria-label="주요 메뉴" v-auto-animate>
         <!-- v-auto-animate는 목록의 선택·추가·삭제 변화에 부드러운 움직임을 더하는 지시어입니다. -->
         <!-- 이 코드에서는 하단 메뉴가 화면 상태에 맞게 바뀔 때 이동을 자연스럽게 보여 줍니다. -->
         <button
@@ -134,7 +143,7 @@ function navigate(view) {
     </template>
 
     <TrialBottomSheet
-      v-if="!isAdminPage"
+      v-if="!isAdminPage && !isMinimalPage"
       :is-open="appStore.isTrialSheetOpen"
       @close="appStore.closeTrialSheet"
       @navigate="navigate"

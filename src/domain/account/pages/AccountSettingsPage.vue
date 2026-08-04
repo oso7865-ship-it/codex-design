@@ -24,7 +24,7 @@ const emit = defineEmits(['navigate'])
         </div>
       </article>
 
-      <button type="button" @click="emit('navigate', 'wf-002')">
+      <button type="button" @click="emit('navigate', 'login')">
         <LogOut :size="20" aria-hidden="true" />
         <span>
           <strong>로그아웃</strong>

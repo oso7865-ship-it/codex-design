@@ -8,6 +8,7 @@ import {
   hasMinimumDeliveryDatesForEachWeek,
 } from '../../../utils/deliveryPolicy'
 import DeliveryDateCalendar from '../../../shared/components/forms/DeliveryDateCalendar.vue'
+import DeliveryScheduleModal from '../components/DeliveryScheduleModal.vue'
 
 const props = defineProps({
   step: {
@@ -31,6 +32,7 @@ const addresses = [
 // ref는 화면에 보여줄 값이 바뀌면 Vue가 화면도 다시 그리게 만드는 반응형 값입니다.
 // 여기서는 단계별 입력이 부족할 때만 안내 문구를 표시하는 데 사용합니다.
 const validationMessage = ref('')
+const isDeliveryScheduleModalOpen = ref(false)
 
 // computed는 다른 반응형 값이 바뀔 때 결과도 자동으로 다시 계산하는 Vue 문법입니다.
 // 선택된 배송지의 이름만 확인 화면에 보여주기 위해 사용합니다.
@@ -101,7 +103,7 @@ function goNext() {
     </ol>
 
     <section v-if="step === 1" class="flow-panel">
-      <p class="section-kicker">STEP 1</p>
+      <p class="section-kicker">1단계 · 배송</p>
       <h1>받기 좋은 날짜와<br />시간을 골라주세요.</h1>
       <DeliveryDateCalendar v-model="appStore.subscriptionApplication.deliveryDays" />
       <p class="form-help">
@@ -121,7 +123,7 @@ function goNext() {
     </section>
 
     <section v-else-if="step === 2" class="flow-panel">
-      <p class="section-kicker">STEP 2</p>
+      <p class="section-kicker">2단계 · 배송지</p>
       <h1>배송지를 선택해주세요.</h1>
       <button
         v-for="address in addresses"
@@ -153,7 +155,7 @@ function goNext() {
     </section>
 
     <section v-else-if="step === 4" class="flow-panel">
-      <p class="section-kicker">STEP 4</p>
+      <p class="section-kicker">4단계 · 신청 내용 확인</p>
       <h1>신청 내용을<br />확인해주세요.</h1>
       <dl class="flow-summary">
         <div>
@@ -176,10 +178,17 @@ function goNext() {
           <dd>{{ selectedAddressName }}</dd>
         </div>
       </dl>
+      <button
+        class="button button-outline flow-summary__detail-button"
+        type="button"
+        @click="isDeliveryScheduleModalOpen = true"
+      >
+        배송 일정 상세 보기
+      </button>
     </section>
 
     <section v-else-if="step === 5" class="flow-panel">
-      <p class="section-kicker">STEP 5</p>
+      <p class="section-kicker">5단계 · 결제수단</p>
       <h1>결제수단을<br />확인해주세요.</h1>
       <button v-if="defaultPaymentMethod" class="address-choice is-selected" type="button">
         <span>
@@ -228,6 +237,13 @@ function goNext() {
     <p v-if="validationMessage" class="flow-validation" role="alert">
       {{ validationMessage }}
     </p>
+
+    <DeliveryScheduleModal
+      :is-open="isDeliveryScheduleModalOpen"
+      :delivery-days="appStore.subscriptionApplication.deliveryDays"
+      :weekly-menu-quantities="appStore.subscriptionApplication.weeklyMenuQuantities"
+      @close="isDeliveryScheduleModalOpen = false"
+    />
 
     <div class="mobile-action-bar">
       <div>

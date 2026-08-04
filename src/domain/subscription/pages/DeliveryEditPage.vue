@@ -47,7 +47,6 @@ function saveDeliveryConditions() {
     </button>
 
     <section class="page-intro">
-      <p class="section-kicker">EDIT DELIVERY</p>
       <h1>이번 회차의 배송 조건을<br />변경해주세요.</h1>
       <p>변경 마감 전까지만 저장할 수 있으며 다음 회차에는 별도로 적용되지 않습니다.</p>
     </section>

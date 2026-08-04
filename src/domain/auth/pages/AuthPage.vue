@@ -15,7 +15,6 @@ const isSubmitted = ref(false)
 
 const pages = {
   '002': {
-    kicker: 'WELCOME BACK',
     title: '챱챱에 로그인해요.',
     description: '구독과 다음 배송 일정을 이어서 관리할 수 있어요.',
     fields: [
@@ -26,11 +25,10 @@ const pages = {
     next: 'home',
     helper: '계정이 없으신가요?',
     helperAction: '회원가입',
-    helperTarget: 'wf-003',
+    helperTarget: 'signup',
     social: true,
   },
   '003': {
-    kicker: 'CREATE ACCOUNT',
     title: '챱챱을 시작해요.',
     description: '배송과 결제 안내를 받을 기본 정보를 입력해 주세요.',
     fields: [
@@ -42,10 +40,9 @@ const pages = {
     next: 'wf-007',
     helper: '이미 계정이 있으신가요?',
     helperAction: '로그인',
-    helperTarget: 'wf-002',
+    helperTarget: 'login',
   },
   '004': {
-    kicker: 'FIND PASSWORD',
     title: '비밀번호를 다시 설정해요.',
     description: '가입한 이메일로 재설정 안내를 보내드립니다.',
     fields: [{ id: 'email', label: '이메일', type: 'email', autocomplete: 'email' }],
@@ -53,7 +50,6 @@ const pages = {
     next: 'wf-005',
   },
   '005': {
-    kicker: 'RESET PASSWORD',
     title: '새 비밀번호를 입력해요.',
     description: '다른 서비스에서 사용하지 않는 비밀번호를 권장합니다.',
     fields: [
@@ -66,10 +62,9 @@ const pages = {
       },
     ],
     action: '비밀번호 변경',
-    next: 'wf-002',
+    next: 'login',
   },
   '006': {
-    kicker: 'CONNECT ACCOUNT',
     title: '소셜 계정을 연결해요.',
     description: '기존 챱챱 구독을 유지하면서 더 편하게 로그인할 수 있어요.',
     fields: [{ id: 'email', label: '챱챱 가입 이메일', type: 'email', autocomplete: 'email' }],
@@ -78,7 +73,6 @@ const pages = {
     social: true,
   },
   '007': {
-    kicker: 'MORE INFORMATION',
     title: '가입 정보를 완성해요.',
     description: '배송 안내에 필요한 정보만 추가로 확인합니다.',
     fields: [
@@ -104,9 +98,18 @@ function continueAfterSubmit() {
 
 <template>
   <div class="page auth-page">
+    <button
+      class="auth-brand"
+      type="button"
+      aria-label="챱챱 홈으로"
+      @click="emit('navigate', 'home')"
+    >
+      <img class="brand-mark" src="/images/chapchap-brand-logo.png" alt="" />
+      <span>챱챱</span>
+    </button>
+
     <section class="auth-card">
       <div class="auth-card__intro">
-        <p class="section-kicker">{{ page.kicker }}</p>
         <h1>{{ page.title }}</h1>
         <p>{{ page.description }}</p>
       </div>
