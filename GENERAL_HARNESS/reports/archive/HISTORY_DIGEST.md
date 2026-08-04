@@ -50,6 +50,8 @@
 
 | 날짜 | 원본 파일 | 핵심 내용 |
 |---|---|---|
+| 2026-07-29 | `2026-07-29_chapchap-design-foundation_report.md` | Chapchap subscription design foundation, palette, component, and responsive-direction record. |
+| 2026-07-30 | `2026-07-30_chapchap-full-screen-implementation_report.md` | Chapchap full-screen implementation checkpoint and verification record. |
 | 2026-06-24 | `2026-06-24_harness-v0.2-audit-fix_report.md` | 최초 감사 피드백 반영, v0.2 핵심 보강(충돌 우선순위, 위험 WARN 중단, 재개 규칙) |
 | 2026-06-25 | `2026-06-25_harness-v0.2.1-stabilization_report.md` | Harness Control Rule 필수 검증 도입, 사전/사후 Gate 구분 |
 | 2026-06-25 | `2026-06-25_harness-v0.2.2-maintenance_report.md` | ADR 번호 고유성 규칙 추가, 최신 Report 우선 원칙 정립 |

@@ -1,5 +1,5 @@
 <script setup>
-import { LogIn, Menu } from 'lucide-vue-next'
+import { LogIn } from 'lucide-vue-next'
 
 defineProps({
   currentView: {
@@ -22,7 +22,8 @@ const emit = defineEmits(['navigate'])
       aria-label="챱챱 홈으로"
       @click="emit('navigate', 'home')"
     >
-      <span class="brand-mark"><Menu :size="18" aria-hidden="true" /></span>
+      <!-- img는 전달받은 브랜드 이미지를 표시하는 태그이며, 버튼의 aria-label이 이름을 대신하므로 alt는 비워 둡니다. -->
+      <img class="brand-mark" src="/images/chapchap-brand-logo.png" alt="" />
       <span>챱챱</span>
     </button>
 
@@ -48,7 +49,7 @@ const emit = defineEmits(['navigate'])
         class="header-auth-button"
         type="button"
         aria-label="로그인 화면으로"
-        @click="emit('navigate', 'wf-002')"
+        @click="emit('navigate', 'login')"
       >
         <LogIn :size="17" aria-hidden="true" />
         <span>로그인</span>

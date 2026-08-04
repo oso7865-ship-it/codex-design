@@ -56,7 +56,6 @@ function startSubscription() {
         <X :size="21" aria-hidden="true" />
       </button>
 
-      <p class="section-kicker">TRIAL COMPLETE</p>
       <h2 id="trial-sheet-title">체험 플랜이<br />종료되었습니다.</h2>
       <p>정기 구독을 시작할 플랜을 선택해주세요. 실제 가격은 결제 전에 안내됩니다.</p>
 

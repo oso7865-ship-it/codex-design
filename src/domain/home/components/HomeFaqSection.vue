@@ -51,7 +51,6 @@ function toggleFaq(faqId) {
   <section class="home-faq" aria-labelledby="home-faq-title">
     <div class="home-faq__heading">
       <div>
-        <p class="section-kicker">FREQUENTLY ASKED</p>
         <h2 id="home-faq-title">자주 묻는 질문</h2>
       </div>
       <button type="button" class="home-faq__more" @click="emit('navigate', 'customer-support')">
@@ -121,7 +120,7 @@ function toggleFaq(faqId) {
 }
 
 .home-faq__heading h2 {
-  margin-top: 7px;
+  margin-top: 0;
   font-size: 31px;
 }
 

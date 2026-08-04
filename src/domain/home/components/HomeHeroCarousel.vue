@@ -10,7 +10,7 @@ const slides = [
     eyebrow: '오늘 한 끼가 필요한 순간',
     highlight: '맛있는 식사도',
     title: '가볍게 챙겨요.',
-    tags: ['#원하는날배송', '#골라먹는메뉴', '#부담없는구독'],
+    benefit: '원하는 날에 받고, 이번 주 메뉴를 직접 골라보세요.',
     action: { label: '이번 주 메뉴 보기', route: 'menu' },
     imagePosition: 'right center',
   },
@@ -19,7 +19,7 @@ const slides = [
     eyebrow: '내 생활에 맞춘 식사 루틴',
     highlight: '바쁜 날에도',
     title: '든든하게 챙겨요.',
-    tags: ['#2주단위구독', '#간편한식사', '#내일정대로'],
+    benefit: '2주 단위로 구성하고, 내 일정에 맞춰 편하게 받아보세요.',
     action: { label: '플랜 살펴보기', route: 'plans' },
     imagePosition: '72% center',
   },
@@ -78,9 +78,7 @@ function handleTouchEnd(event) {
               <span>{{ slide.highlight }}</span>
               {{ slide.title }}
             </h1>
-            <ul class="home-hero__tags" aria-label="주요 특징">
-              <li v-for="tag in slide.tags" :key="tag">{{ tag }}</li>
-            </ul>
+            <p class="home-hero__benefit">{{ slide.benefit }}</p>
             <button
               class="home-hero__link"
               type="button"
@@ -161,7 +159,12 @@ function handleTouchEnd(event) {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(18, 20, 21, 0.78) 0%, rgba(18, 20, 21, 0.66) 33%, rgba(18, 20, 21, 0.1) 67%),
+    linear-gradient(
+      90deg,
+      rgba(18, 20, 21, 0.78) 0%,
+      rgba(18, 20, 21, 0.66) 33%,
+      rgba(18, 20, 21, 0.1) 67%
+    ),
     linear-gradient(0deg, rgba(0, 0, 0, 0.18), transparent 48%);
 }
 
@@ -196,24 +199,13 @@ function handleTouchEnd(event) {
   color: #fff;
 }
 
-.home-hero__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 30px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.home-hero__tags li {
-  padding: 7px 11px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.17);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  backdrop-filter: blur(7px);
+.home-hero__benefit {
+  max-width: 340px;
+  margin-top: 22px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.65;
 }
 
 .home-hero__link {
@@ -249,7 +241,9 @@ function handleTouchEnd(event) {
   color: #fff;
   opacity: 0.9;
   transform: translateY(-50%);
-  transition: background 0.2s ease, opacity 0.2s ease;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .home-hero__arrow:hover {
@@ -282,7 +276,9 @@ function handleTouchEnd(event) {
   border: 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.45);
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .home-hero__indicators button.is-active {
@@ -311,7 +307,12 @@ function handleTouchEnd(event) {
 
   .home-hero__scrim {
     background:
-      linear-gradient(90deg, rgba(18, 20, 21, 0.8) 0%, rgba(18, 20, 21, 0.5) 70%, rgba(18, 20, 21, 0.12) 100%),
+      linear-gradient(
+        90deg,
+        rgba(18, 20, 21, 0.8) 0%,
+        rgba(18, 20, 21, 0.5) 70%,
+        rgba(18, 20, 21, 0.12) 100%
+      ),
       linear-gradient(0deg, rgba(0, 0, 0, 0.34), transparent 58%);
   }
 
@@ -323,14 +324,9 @@ function handleTouchEnd(event) {
     font-size: clamp(36px, 10vw, 50px);
   }
 
-  .home-hero__tags {
-    gap: 6px;
-    margin-top: 24px;
-  }
-
-  .home-hero__tags li {
-    padding: 6px 8px;
-    font-size: 11px;
+  .home-hero__benefit {
+    margin-top: 18px;
+    font-size: 13px;
   }
 
   .home-hero__arrow {

@@ -30,12 +30,14 @@ const root = resolveRoot();
 const PLACEHOLDER_NAMES = new Set(['username', 'user', 'yourname', 'name', '사용자', 'youruser', 'currentuser']);
 
 const PATTERNS = [
-  /\/Users\/([\p{L}\p{N}._-]+)/gu,
+  // The lookbehind prevents a repository-relative segment such as
+  // `src/domain/home/pages` from matching the absolute `/home/<user>` pattern.
+  /(?<![\p{L}\p{N}._-])\/Users\/([\p{L}\p{N}._-]+)/gu,
   /[A-Za-z]:\\Users\\([\p{L}\p{N}._-]+)/gu,
   /[A-Za-z]:\/Users\/([\p{L}\p{N}._-]+)/gu,
   /\\\\[\p{L}\p{N}._-]+\\Users\\([\p{L}\p{N}._-]+)/gu, // UNC 경로: \\server\Users\name
-  /\/home\/([\p{L}\p{N}._-]+)/gu,
-  /\/root\/([\p{L}\p{N}._-]+)/gu,
+  /(?<![\p{L}\p{N}._-])\/home\/([\p{L}\p{N}._-]+)/gu,
+  /(?<![\p{L}\p{N}._-])\/root\/([\p{L}\p{N}._-]+)/gu,
 ];
 
 function walk(dir, files = []) {

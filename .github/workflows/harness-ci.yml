@@ -1,0 +1,31 @@
+name: harness-ci
+
+# 하네스 검증 스크립트 7종을 push/PR 시점에 강제 실행한다.
+# 근거: 실사용 검수에서 "규칙은 있는데 실행이 안 되는" 불이행이 반복 확인됨(ADR-044).
+# 이 워크플로우의 job 이름 "validate"는 main 브랜치 보호의 required status check로 사용된다.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run harness validators
+        working-directory: GENERAL_HARNESS
+        run: |
+          node scripts/validate-docs.mjs
+          node scripts/validate-skills.mjs
+          node scripts/validate-references.mjs
+          node scripts/validate-report-consistency.mjs
+          node scripts/validate-no-personal-paths.mjs
+          node scripts/validate-harness.mjs
+          node scripts/validate-no-secrets.mjs

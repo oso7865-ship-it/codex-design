@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Check, ChevronRight, Sparkles } from 'lucide-vue-next'
+import { ChevronRight } from 'lucide-vue-next'
 import { useAppStore } from '../../../stores/useAppStore'
 
 const appStore = useAppStore()
@@ -20,7 +20,6 @@ const plans = [
   },
   {
     id: 'solo',
-    eyebrow: 'RECOMMENDED',
     name: 'Solo 플랜',
     description: '내 식사 리듬을 만들고 싶은 1인 가구',
     items: ['2주 단위 구독', '주차별 3개 이상', '메뉴별 추가금 없음'],
@@ -68,7 +67,6 @@ function openPlanDetail(planId) {
 <template>
   <div class="page plan-page">
     <section class="page-intro page-intro--centered">
-      <p class="eyebrow"><Sparkles :size="15" aria-hidden="true" /> PLAN</p>
       <h1>나에게 맞는 식사 리듬을 선택해 보세요.</h1>
       <p>
         플랜에 포함된 메뉴를 선택해 구성합니다. 메뉴별 가격은 표시하지 않으며, 플랜 가격은 현재 준비
@@ -88,7 +86,7 @@ function openPlanDetail(planId) {
         @focusout="resetPlanHighlight"
       >
         <div class="plan-card__top">
-          <span class="plan-eyebrow">{{ plan.eyebrow }}</span>
+          <span v-if="plan.eyebrow" class="plan-eyebrow">{{ plan.eyebrow }}</span>
           <span v-if="plan.recommended" class="recommendation-badge">추천</span>
         </div>
         <h2>{{ plan.name }}</h2>
@@ -98,10 +96,7 @@ function openPlanDetail(planId) {
           <strong>가격 미정</strong>
         </div>
         <ul>
-          <li v-for="item in plan.items" :key="item">
-            <Check :size="17" aria-hidden="true" />
-            {{ item }}
-          </li>
+          <li v-for="item in plan.items" :key="item">{{ item }}</li>
         </ul>
         <button class="text-button" type="button" @click="openPlanDetail(plan.id)">
           플랜 상세 보기
@@ -121,7 +116,6 @@ function openPlanDetail(planId) {
 
     <section class="plan-assurance">
       <div>
-        <p class="section-kicker">HOW IT WORKS</p>
         <h2>선택은 가볍게,<br />구성은 자유롭게.</h2>
       </div>
       <div class="plan-assurance__items">

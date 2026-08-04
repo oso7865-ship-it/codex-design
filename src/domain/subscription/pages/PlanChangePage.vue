@@ -43,7 +43,6 @@ function savePlanChange() {
     </button>
 
     <section v-if="!isSaved" class="page-intro">
-      <p class="section-kicker">CHANGE PLAN</p>
       <h1>다음에 이용할 플랜을<br />선택해주세요.</h1>
       <p>현재 회차는 그대로 유지되며, 선택한 플랜은 다음 정기결제일부터 적용됩니다.</p>
     </section>
@@ -80,7 +79,6 @@ function savePlanChange() {
 
     <section v-if="isSaved" class="management-result" role="status">
       <span class="management-result__icon"><Check :size="34" aria-hidden="true" /></span>
-      <p class="section-kicker">CHANGE SCHEDULED</p>
       <h1>플랜 변경을 예약했어요.</h1>
       <p>다음 정기결제일부터 선택한 플랜이 적용됩니다.</p>
       <button class="button button-primary" type="button" @click="emit('navigate', 'subscription')">

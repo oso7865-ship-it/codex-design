@@ -10,6 +10,8 @@
 
 ---
 
+> Superseded note: This is a historical record. For current decisions, follow `reports/_LATEST.md` and `GENERAL_HARNESS/05.WORKING_CONTEXT.md`.
+
 ## 0. 작업 범위 확인
 
 | 항목 | 내용 |

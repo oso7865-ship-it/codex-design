@@ -15,7 +15,6 @@ const otherMenus = menuItems.slice(1)
   <section class="home-menu" aria-labelledby="home-menu-title">
     <div class="home-menu__heading">
       <div>
-        <p class="section-kicker">THIS WEEK'S MENU</p>
         <h2 id="home-menu-title">이번 주 챱챱 메뉴</h2>
         <p>추천 메뉴와 이번 주에 선택할 수 있는 다른 메뉴를 함께 살펴보세요.</p>
       </div>
@@ -87,7 +86,7 @@ const otherMenus = menuItems.slice(1)
 }
 
 .home-menu__heading h2 {
-  margin-top: 7px;
+  margin-top: 0;
   font-size: 31px;
 }
 

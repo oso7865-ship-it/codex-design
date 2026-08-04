@@ -50,6 +50,7 @@ const authRoutes = pageCatalog
     name: `wf-${page.id}`,
     component: AuthPage,
     props: { pageId: page.id },
+    meta: { layout: 'minimal' },
   }))
 
 const adminRoutes = pageCatalog
@@ -69,8 +70,28 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomePage },
+    // 실제 서비스에서 사용하는 인증 진입점입니다. 기존 wf 경로는 와이어프레임 확인용으로 유지합니다.
+    {
+      path: '/login',
+      name: 'login',
+      component: AuthPage,
+      props: { pageId: '002' },
+      meta: { layout: 'minimal' },
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: AuthPage,
+      props: { pageId: '003' },
+      meta: { layout: 'minimal' },
+    },
     { path: '/menu', name: 'menu', component: MenuListPage },
-    { path: '/subscribe/menu', name: 'subscribe-menu', component: MenuBuilder },
+    {
+      path: '/subscribe/menu',
+      name: 'subscribe-menu',
+      component: MenuBuilder,
+      meta: { layout: 'minimal' },
+    },
     { path: '/plans', name: 'plans', component: PlanPage },
     ...authRoutes,
     { path: '/wf-008', name: 'wf-008', component: MenuListPage },
@@ -178,36 +199,42 @@ const router = createRouter({
       name: 'wf-013',
       component: SubscriptionFlowPage,
       props: { step: 1 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/subscribe/address',
       name: 'wf-014',
       component: SubscriptionFlowPage,
       props: { step: 2 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/subscribe/confirm',
       name: 'wf-016',
       component: SubscriptionFlowPage,
       props: { step: 4 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/subscribe/payment',
       name: 'wf-017',
       component: SubscriptionFlowPage,
       props: { step: 5 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/subscribe/result',
       name: 'wf-018',
       component: SubscriptionFlowPage,
       props: { step: 6 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/subscribe/complete',
       name: 'wf-019',
       component: SubscriptionFlowPage,
       props: { step: 7 },
+      meta: { layout: 'minimal' },
     },
     {
       path: '/support',

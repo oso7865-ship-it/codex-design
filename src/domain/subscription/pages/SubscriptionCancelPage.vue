@@ -28,7 +28,6 @@ function confirmCancellation() {
     </button>
 
     <section v-if="!isComplete" class="page-intro">
-      <p class="section-kicker">CANCEL SUBSCRIPTION</p>
       <h1>구독 해지 전<br />꼭 확인해주세요.</h1>
       <p>해지는 현재 이용 중인 기간을 즉시 종료하지 않습니다.</p>
     </section>
@@ -47,7 +46,6 @@ function confirmCancellation() {
 
     <section v-if="!isComplete" class="retention-options">
       <div>
-        <p class="section-kicker">BEFORE YOU LEAVE</p>
         <h2>해지 전에 이런 방법도 있어요.</h2>
         <p>필요한 일정만 미루거나 다음 결제일부터 플랜을 변경할 수 있습니다.</p>
       </div>
@@ -75,7 +73,6 @@ function confirmCancellation() {
       <span class="management-result__icon">
         <CheckCircle2 :size="34" aria-hidden="true" />
       </span>
-      <p class="section-kicker">CANCELLATION SCHEDULED</p>
       <h1>구독 해지가 예약되었습니다.</h1>
       <p>현재 이용 기간이 끝난 뒤 다음 정기결제부터 청구되지 않습니다.</p>
       <button class="button button-primary" type="button" @click="emit('navigate', 'subscription')">
