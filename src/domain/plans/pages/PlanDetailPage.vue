@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CalendarCheck, Check, ChevronRight, Info, RefreshCcw } from 'lucide-vue-next'
+import { CalendarCheck, ChevronRight, Info, RefreshCcw } from 'lucide-vue-next'
 import { planDetails } from '../../../shared/mocks/prototypeData'
 import { useAppStore } from '../../../stores/useAppStore'
 import PageBackButton from '../../../shared/components/navigation/PageBackButton.vue'
@@ -28,7 +28,6 @@ function choosePlan() {
 
     <section class="plan-detail-hero">
       <div>
-        <p class="section-kicker">{{ plan.kicker }}</p>
         <h1>{{ plan.name }}</h1>
         <p>{{ plan.description }}</p>
         <div class="plan-detail-price">
@@ -59,14 +58,10 @@ function choosePlan() {
 
     <section class="plan-benefit-section">
       <div>
-        <p class="section-kicker">INCLUDED</p>
         <h2>플랜에 포함되는 기능</h2>
       </div>
       <ul>
-        <li v-for="benefit in plan.benefits" :key="benefit">
-          <Check :size="18" aria-hidden="true" />
-          {{ benefit }}
-        </li>
+        <li v-for="benefit in plan.benefits" :key="benefit">{{ benefit }}</li>
       </ul>
     </section>
 

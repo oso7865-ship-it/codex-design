@@ -99,7 +99,8 @@ p {
   height: 72px;
   max-width: none;
   margin: 0;
-  padding: 0 max(28px, calc((100vw - 1180px) / 2));
+  /* 헤더의 시작·끝을 .page 콘텐츠와 맞춰 화면 중심축이 흔들리지 않게 합니다. */
+  padding: 0 max(28px, calc((100vw - 1120px) / 2 + 28px));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -127,12 +128,10 @@ p {
   letter-spacing: -0.06em;
 }
 .brand-mark {
-  width: 29px;
-  height: 29px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: var(--color-primary);
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 .desktop-navigation {
   display: flex;
@@ -231,6 +230,9 @@ p {
 .customer-content {
   padding-bottom: 112px;
 }
+.customer-content--minimal {
+  padding-bottom: 0;
+}
 .page {
   max-width: 1120px;
   margin: 0 auto;
@@ -253,6 +255,12 @@ p {
   margin-top: 16px;
   font-size: clamp(38px, 4.3vw, 62px);
   line-height: 1.16;
+}
+.page-intro > h1:first-child {
+  margin-top: 0;
+}
+.page-intro--with-action h1:first-child {
+  margin-top: 0;
 }
 .button {
   min-height: 46px;
@@ -431,14 +439,20 @@ p {
   list-style: none;
 }
 .plan-card li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
+  padding-left: 12px;
   color: var(--color-text-muted);
   font-size: 13px;
 }
-.plan-card li svg {
-  color: var(--color-primary);
+.plan-card li::before {
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  content: '';
 }
 .plan-card .button {
   width: 100%;
@@ -1319,6 +1333,11 @@ p {
   .customer-quick-navigation {
     display: none;
   }
+
+  /* 태블릿에서는 퀵 메뉴를 숨기되, 메뉴·플랜·고객지원 진입 경로는 하단 탐색으로 유지합니다. */
+  .bottom-navigation {
+    display: flex;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1657,7 +1676,7 @@ p {
   background: var(--color-surface-subtle);
 }
 .plan-assurance h2 {
-  margin-top: 8px;
+  margin-top: 0;
   font-size: 30px;
 }
 .plan-assurance__items {
@@ -1916,6 +1935,10 @@ p {
   font-weight: 700;
   text-align: right;
 }
+.flow-summary__detail-button {
+  width: 100%;
+  margin-top: 16px;
+}
 .flow-check {
   display: flex !important;
   align-items: flex-start;
@@ -2048,7 +2071,7 @@ p {
 }
 
 .subscription-settings h2 {
-  margin-top: 6px;
+  margin-top: 0;
   color: var(--color-text-muted);
   font-size: 17px;
 }
@@ -2763,6 +2786,20 @@ button.history-list-item:hover {
   max-width: 620px;
 }
 
+.auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
 .auth-card {
   padding: clamp(24px, 5vw, 46px);
   border: 1px solid var(--color-border);
@@ -2776,7 +2813,7 @@ button.history-list-item:hover {
 }
 
 .auth-card__intro h1 {
-  margin-top: 12px;
+  margin-top: 0;
   font-size: clamp(32px, 5vw, 44px);
 }
 
@@ -3023,7 +3060,7 @@ button.history-list-item:hover {
 
 .menu-detail-copy h1,
 .plan-detail-hero h1 {
-  margin-top: 12px;
+  margin-top: 0;
   font-size: clamp(38px, 5vw, 58px);
 }
 
@@ -3153,7 +3190,7 @@ button.history-list-item:hover {
 }
 
 .plan-benefit-section h2 {
-  margin-top: 8px;
+  margin-top: 0;
   color: #ffffff;
 }
 
@@ -3167,15 +3204,20 @@ button.history-list-item:hover {
 }
 
 .plan-benefit-section li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
+  padding-left: 14px;
   color: #ffffff;
   font-size: 14px;
 }
-
-.plan-benefit-section li svg {
-  color: var(--color-primary);
+.plan-benefit-section li::before {
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  content: '';
 }
 
 /* 구독 회차 */

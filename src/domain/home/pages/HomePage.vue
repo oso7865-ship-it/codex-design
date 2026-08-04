@@ -3,6 +3,7 @@ import HomeFaqSection from '../components/HomeFaqSection.vue'
 import HomeHeroCarousel from '../components/HomeHeroCarousel.vue'
 import HomeMenuCarousel from '../components/HomeMenuCarousel.vue'
 import HomeRoutineSection from '../components/HomeRoutineSection.vue'
+import HomeSupportNoticeSection from '../components/HomeSupportNoticeSection.vue'
 import HomeSubscriptionCta from '../components/HomeSubscriptionCta.vue'
 
 // defineEmits는 자식 페이지가 App.vue에 화면 이동을 요청할 때 사용하는 Vue 문법입니다.
@@ -26,5 +27,8 @@ const emit = defineEmits(['navigate'])
 
     <!-- 모든 안내를 확인한 사용자가 구독 또는 플랜 비교를 시작하는 마지막 영역입니다. -->
     <HomeSubscriptionCta @navigate="emit('navigate', $event)" />
+
+    <!-- 푸터로 내려가기 전에 상담과 최신 운영 공지를 다시 확인할 수 있는 보조 안내 영역입니다. -->
+    <HomeSupportNoticeSection @navigate="emit('navigate', $event)" />
   </div>
 </template>

@@ -9,7 +9,6 @@ const emit = defineEmits(['navigate'])
   <!-- section은 메인 안내를 모두 확인한 뒤 구독을 시작하는 마지막 행동 영역입니다. -->
   <section class="home-subscription-cta">
     <div>
-      <p class="section-kicker">FOR YOUR ROUTINE</p>
       <h2>나에게 맞는 플랜으로<br />식사 루틴을 시작해 보세요.</h2>
       <p>처음 시작한다면 추천 Solo 플랜부터 확인할 수 있어요.</p>
     </div>
@@ -41,7 +40,7 @@ const emit = defineEmits(['navigate'])
 }
 
 .home-subscription-cta h2 {
-  margin-top: 7px;
+  margin-top: 0;
   font-size: 31px;
 }
 
