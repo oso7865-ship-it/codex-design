@@ -8,7 +8,7 @@
 | 이력 | 최신 판단 기준 | 기준 |
 |---|---|---|
 | 하네스 유지보수 최신 | `reports/2026-08-03_0153_harness-stats-script_report.md` | 성적표 집계 스크립트 추가 및 하네스 동결 선언 이후 상태 |
-| 부착 프로젝트 최신 | 해당 프로젝트 폴더의 `reports/_LATEST.md`를 따른다 | 프로젝트 Report는 프로젝트 폴더에 남고, 하네스 규칙의 공백이 드러난 경우 요약만 하네스 유지보수 Report로 환류한다 |
+| 부착 프로젝트 최신 | `reports/2026-08-02_chapchap-home-carousel-content_report.md` | 챱챱(codex-design) 홈 캐러셀·콘텐츠 작업 이후 상태. 2026-08-04 하네스 사본 갱신 때 삭제됐던 프로젝트 Report 10건을 git 이력에서 복원함 |
 
 > 주의: 이전 Report는 과거 의사결정 근거와 변경 증거로만 사용한다. Next Work 판단은 이 파일과 `05.WORKING_CONTEXT.md`를 우선한다.
 
